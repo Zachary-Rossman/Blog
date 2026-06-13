@@ -1,3 +1,5 @@
+import Button from "@/components/ui/Button";
+
 export default function Home() {
   return (
     <section>
@@ -6,6 +8,8 @@ export default function Home() {
       <p>
         A full-stack blog application built with Next.js.
       </p>
+
+      <Button text="Read Posts" />
     </section>
   );
 }
