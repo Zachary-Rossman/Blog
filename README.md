@@ -90,16 +90,31 @@ Planned (Vercel)
 
 ```
 project-root/
-│
+ 
 ├── app/
-│   ├── page.tsx
-│   ├── layout.tsx
-│   └── globals.css
-│
+    ├── dashboard/
+        ├── page.tsx 
+    ├── login/
+        ├── page.tsx 
+    ├── posts/
+        ├── page.tsx 
+    ├── register/
+        ├── page.tsx 
+    ├── page.tsx
+    ├── layout.tsx
+    └── globals.css
+ 
+├── components/
+    ├── layout/
+    ├── navigation/
+    ├── ui/
+ 
+├── lib/
+ 
 ├── public/
-│
+ 
 ├── node_modules/
-│
+ 
 ├── README.md
 ├── package.json
 ├── next.config.ts
