@@ -93,13 +93,13 @@ project-root/
  
 ├── app/
     ├── dashboard/
-        ├── page.tsx 
+        └── page.tsx 
     ├── login/
-        ├── page.tsx 
+        └── page.tsx 
     ├── posts/
-        ├── page.tsx 
+        └── page.tsx 
     ├── register/
-        ├── page.tsx 
+        └── page.tsx 
     ├── page.tsx
     ├── layout.tsx
     └── globals.css
@@ -107,7 +107,8 @@ project-root/
 ├── components/
     ├── layout/
     ├── navigation/
-    ├── ui/
+        └── Navbar.tsx
+    └── ui/
  
 ├── lib/
  
