@@ -109,6 +109,8 @@ project-root/
         └── Hero.tsx
     ├── navigation/
         └── Navbar.tsx
+    ├── posts
+        └── PostCard.tsx
     └── ui/
         └── Button.tsx
  
