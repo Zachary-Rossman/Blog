@@ -114,12 +114,15 @@ project-root/
     └── ui/
         └── Button.tsx
 
-├── app/
+├── data/
     └── posts.ts
  
 ├── lib/
  
 ├── public/
+
+├── types/
+    └── post.ts
  
 ├── node_modules/
  

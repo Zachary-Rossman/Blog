@@ -23,6 +23,8 @@ export default function Home() {
             author={post.author}
             likes={post.likes}
             comments={post.comments}
+            category={post.category}
+            publishedDate={post.publishedDate}
             />
             ))}
       </div>
