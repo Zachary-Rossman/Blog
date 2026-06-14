@@ -1,7 +1,7 @@
 import Button from "@/components/ui/Button";
 import Hero from "@/components/layout/Hero";
-import PostCard from "@/components/posts/PostCard";
 import { posts } from "@/data/posts";
+import PostList from "@/components/posts/PostList";
 
 export default function Home() {
 
@@ -15,19 +15,7 @@ export default function Home() {
 
       <h1>Recent Posts</h1>
 
-      <div className="flex flex-wrap gap-4">
-        {posts.map((post) => (
-          <PostCard
-            key={post.id}
-            title={post.title}
-            author={post.author}
-            likes={post.likes}
-            comments={post.comments}
-            category={post.category}
-            publishedDate={post.publishedDate}
-            />
-            ))}
-      </div>
+      <PostList posts={posts} />
   
     </>
   );

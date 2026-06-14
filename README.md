@@ -110,7 +110,8 @@ project-root/
     ├── navigation/
         └── Navbar.tsx
     ├── posts
-        └── PostCard.tsx
+        ├── PostCard.tsx
+        └── PostList.tsx
     └── ui/
         └── Button.tsx
 
@@ -145,10 +146,10 @@ project-root/
 
 ### Phase 2
 
-* [ ] Navigation system
-* [ ] Layout structure
-* [ ] Blog post pages
-* [ ] Styling implementation
+* [x] Navigation system
+* [x] Layout structure
+* [x] Blog post pages
+* [x] Styling implementation
 
 ### Phase 3
 

@@ -1,33 +1,25 @@
+import type { Post } from "@/types/post"
+
 type PostCardProps = {
-    title: string,
-    author: string;
-    likes: number;
-    comments: number;
-    category: string,
-    publishedDate: string,
+    post: Post,
 };
 
 export default function PostCard({
-    title,
-    author,
-    likes,
-    comments,
-    category,
-    publishedDate,
+    post,
 }: PostCardProps) {
     return (
         <article className="bg-cyan-300 border">
-            <h2>{title}</h2>
+            <h2>{post.title}</h2>
 
-            <p>By {author}</p>
+            <p>By {post.author}</p>
 
-            <p>{likes} likes</p>
+            <p>{post.likes} likes</p>
 
-            <p>{comments}</p>
+            <p>{post.comments}</p>
 
-            <p>Category: {category}</p>
+            <p>Category: {post.category}</p>
 
-            <p>Published: {publishedDate}</p>
+            <p>Published: {post.publishedDate}</p>
         </article>
     )
 }
