@@ -97,12 +97,15 @@ project-root/
     ├── login/
         └── page.tsx 
     ├── posts/
+        ├──[id]
+            └── page.tsx
         └── page.tsx 
     ├── register/
         └── page.tsx 
-    ├── page.tsx
+    ├── favicon.ico
+    ├── globals.css
     ├── layout.tsx
-    └── globals.css
+    └── page.tsx
  
 ├── components/
     ├── layout/
@@ -127,9 +130,13 @@ project-root/
  
 ├── node_modules/
  
-├── README.md
-├── package.json
+├── .gitignore
+├── next-env.d.ts
 ├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── README.md
 └── tsconfig.json
 ```
 
