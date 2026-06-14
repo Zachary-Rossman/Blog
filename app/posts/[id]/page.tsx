@@ -1,4 +1,4 @@
-import { posts } from "@/data/posts";
+import { getPostById } from "@/lib/posts";
 
 export default async function PostPage({
   params,
@@ -9,7 +9,7 @@ export default async function PostPage({
 
   const postId = Number(id);
 
-  const post = posts.find((p) => p.id === postId);
+  const post = getPostById(postId);
 
   if (!post) {
     return <h1>Post not found</h1>;

@@ -122,6 +122,7 @@ project-root/
     └── posts.ts
  
 ├── lib/
+    └── posts.ts
  
 ├── public/
 
