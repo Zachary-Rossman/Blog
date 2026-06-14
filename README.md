@@ -106,6 +106,7 @@ project-root/
  
 ├── components/
     ├── layout/
+        └── Hero.tsx
     ├── navigation/
         └── Navbar.tsx
     └── ui/
@@ -132,7 +133,7 @@ project-root/
 * [x] Project setup
 * [x] Repository initialization
 * [x] README creation
-* [ ] Basic routing
+* [x] Basic routing
 
 ### Phase 2
 
