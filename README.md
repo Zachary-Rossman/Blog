@@ -113,6 +113,9 @@ project-root/
         └── PostCard.tsx
     └── ui/
         └── Button.tsx
+
+├── app/
+    └── posts.ts
  
 ├── lib/
  

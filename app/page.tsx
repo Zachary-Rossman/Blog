@@ -1,30 +1,9 @@
 import Button from "@/components/ui/Button";
 import Hero from "@/components/layout/Hero";
 import PostCard from "@/components/posts/PostCard";
+import { posts } from "@/data/posts";
 
 export default function Home() {
-  
-  const posts = [
-    {
-      id: 1,
-      title: "Learning Next.js",
-      author: "Zach",
-      likes: 12,
-    },
-    {
-      id: 2,
-      title: "Understanding Components",
-      author: "Zach",
-      likes: 7,
-    },
-    {
-      id: 3,
-      title: "My First Blog Post",
-      author: "Zach",
-      likes: 24,
-    },
-  ];
-
 
   return (
     <>
@@ -43,6 +22,7 @@ export default function Home() {
             title={post.title}
             author={post.author}
             likes={post.likes}
+            comments={post.comments}
             />
             ))}
       </div>

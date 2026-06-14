@@ -2,12 +2,14 @@ type PostCardProps = {
     title: string,
     author: string;
     likes: number;
+    comments: number;
 };
 
 export default function PostCard({
     title,
     author,
     likes,
+    comments
 }: PostCardProps) {
     return (
         <article className="bg-cyan-300 border">
@@ -16,6 +18,8 @@ export default function PostCard({
             <p>By {author}</p>
 
             <p>{likes} likes</p>
+
+            <p>{comments}</p>
         </article>
     )
 }
