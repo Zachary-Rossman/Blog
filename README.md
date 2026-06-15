@@ -99,7 +99,8 @@ project-root/
     ├── posts/
         ├──[id]
             └── page.tsx
-        └── page.tsx 
+        ├── create
+            └── page.tsx 
     ├── register/
         └── page.tsx 
     ├── favicon.ico
@@ -113,6 +114,7 @@ project-root/
     ├── navigation/
         └── Navbar.tsx
     ├── posts
+        ├── CreatePostForm.tsx
         ├── PostCard.tsx
         └── PostList.tsx
     └── ui/
