@@ -1,35 +1,56 @@
 "use client";
 
 import { useState } from "react";
+import type { Post } from "@/types/post";
 
-export default function CreatePostForm() {
-    const [title, setTitle] = useState("");
-    const [author, setAuthor] = useState("");
+type Props = {
+  onCreate: (post: Post) => void;
+};
 
-    return (
-        <form className="flex flex-col gap-4 max-w-md">
-            <input
-            type="text"
-            placeholder="Post Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="border p-2"
-            />
+export default function CreatePostForm({ onCreate }: Props) {
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
 
-            <input
-            type="text"
-            placeholder="Author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-            className="border p-2"
-            />
+  function handleSubmit() {
+    const newPost: Post = {
+      id: Date.now(),
+      title,
+      author,
+      category: "General",
+      publishedDate: new Date().toISOString(),
+      likes: 0,
+      comments: 0,
+    };
 
-            <button
-            type="button"
-            className="bg-black text-white p-2"
-            >
-                Create Post
-            </button>
-        </form>
-    )
+    onCreate(newPost);
+
+    setTitle("");
+    setAuthor("");
+  }
+
+  return (
+    <form className="flex flex-col gap-4 max-w-md">
+      <input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Post title"
+        className="border p-2"
+      />
+
+      <input
+        value={author}
+        onChange={(e) => setAuthor(e.target.value)}
+        placeholder="Author"
+        className="border p-2"
+      />
+
+      <button
+        type="button"
+        onClick={handleSubmit}
+        className="bg-black text-white p-2"
+      >
+        Create Post
+      </button>
+    </form>
+  );
 }
