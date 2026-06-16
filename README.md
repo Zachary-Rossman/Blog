@@ -92,6 +92,10 @@ Planned (Vercel)
 project-root/
  
 ├── app/
+    ├── api/
+        ├── accounts/
+        ├── posts/
+            └── route.ts
     ├── dashboard/
         └── page.tsx 
     ├── login/
@@ -99,7 +103,7 @@ project-root/
     ├── posts/
         ├──[id]
             └── page.tsx
-        ├── create
+        ├── new
             └── page.tsx 
     ├── register/
         └── page.tsx 
@@ -164,8 +168,8 @@ project-root/
 ### Phase 3
 
 * [ ] Database integration
-* [ ] Post storage
-* [ ] Dynamic routes
+* [x] Post storage
+* [x] Dynamic routes
 
 ### Phase 4
 
