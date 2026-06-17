@@ -3,30 +3,34 @@
 import { useState } from "react";
 import type { Post } from "@/types/post";
 
-type Props = {
-  onCreate: (post: Post) => void;
-};
-
-export default function CreatePostForm({ onCreate }: Props) {
+export default function CreatePostForm() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
+  const [ category, setCategory ] = useState("");
 
-  function handleSubmit() {
-    const newPost: Post = {
-      id: Date.now(),
-      title,
-      author,
-      category: "General",
-      publishedDate: new Date().toISOString(),
-      likes: 0,
-      comments: 0,
-    };
+  async function handleSubmit() {
+  const newPost: Post = {
+    id: Date.now(),
+    title,
+    author,
+    category,
+    publishedDate: new Date().toISOString(),
+    likes: 0,
+    comments: 0,
+  };
 
-    onCreate(newPost);
+  const response = await fetch("/api/posts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newPost),
+  });
 
-    setTitle("");
-    setAuthor("");
-  }
+  const data = await response.json();
+
+  console.log(data);
+}
 
   return (
     <form className="flex flex-col gap-4 max-w-md">
@@ -41,6 +45,14 @@ export default function CreatePostForm({ onCreate }: Props) {
         value={author}
         onChange={(e) => setAuthor(e.target.value)}
         placeholder="Author"
+        className="border p-2"
+      />
+
+      <input
+        type="text"
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        placeholder="Category"
         className="border p-2"
       />
 

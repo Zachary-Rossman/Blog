@@ -23,8 +23,6 @@ export default function Home() {
 
       <h1>Recent Posts</h1>
 
-      <CreatePostForm onCreate={handleCreatePost} />
-
       <PostList posts={posts} />
     </>
   );
