@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Hero from "@/components/layout/Hero";
 import PostList from "@/components/posts/PostList";
-import CreatePostForm from "@/components/posts/CreatePostForm";
 import { posts as initialPosts } from "@/data/posts";
 import type { Post } from "@/types/post";
 

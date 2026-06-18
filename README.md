@@ -111,7 +111,7 @@ project-root/
     ├── globals.css
     ├── layout.tsx
     └── page.tsx
- 
+
 ├── components/
     ├── layout/
         └── Hero.tsx
@@ -128,7 +128,11 @@ project-root/
     └── posts.ts
  
 ├── lib/
+    ├── mongodb.ts
     └── posts.ts
+
+├── models
+    └── Post.ts
  
 ├── public/
 
