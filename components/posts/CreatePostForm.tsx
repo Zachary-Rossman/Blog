@@ -9,14 +9,10 @@ export default function CreatePostForm() {
   const [ category, setCategory ] = useState("");
 
   async function handleSubmit() {
-  const newPost: Post = {
-    id: Date.now(),
+  const newPost = {
     title,
     author,
-    category,
-    publishedDate: new Date().toISOString(),
-    likes: 0,
-    comments: 0,
+    category
   };
 
   const response = await fetch("/api/posts", {

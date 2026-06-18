@@ -171,7 +171,7 @@ project-root/
 
 ### Phase 3
 
-* [ ] Database integration
+* [x] Database integration
 * [x] Post storage
 * [x] Dynamic routes
 

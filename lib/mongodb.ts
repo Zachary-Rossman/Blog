@@ -11,5 +11,5 @@ export async function connectDB() {
     return;
   }
 
-  await mongoose.connect(MONGODB_URI);
+  await mongoose.connect(MONGODB_URI as string);
 }
