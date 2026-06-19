@@ -1,5 +1,11 @@
+export type CreatePostInput = {
+    title: string;
+    author: string;
+    category: string;
+}
+
 export type Post = {
-    id: number;
+    _id: number;
     title: string;
     author: string;
     category: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Post } from "@/types/post";
+import type { CreatePostInput } from "@/types/post";
 
 export default function CreatePostForm() {
   const [title, setTitle] = useState("");
@@ -9,7 +9,7 @@ export default function CreatePostForm() {
   const [ category, setCategory ] = useState("");
 
   async function handleSubmit() {
-  const newPost = {
+  const newPost: CreatePostInput = {
     title,
     author,
     category
