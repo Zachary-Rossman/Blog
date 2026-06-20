@@ -3,12 +3,12 @@ import Post from "@/models/Post";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-    await connectDB();
-    
-    return NextResponse.json({
-      message: "Connected successfully",
-    })
-  };
+  await connectDB();
+
+  const posts = await Post.find()
+
+  return NextResponse.json(posts);
+}
 
   export async function POST(request: Request) {
     console.log(request);
