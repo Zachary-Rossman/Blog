@@ -9,7 +9,7 @@ export default function PostList({ posts }: Props) {
   return (
     <div className="flex flex-wrap gap-4">
       {posts.map((post) => (
-        <PostCard key={post.id} post={post} />
+        <PostCard key={post._id} post={post} />
       ))}
     </div>
   );

@@ -1,17 +1,10 @@
-"use client";
-
-import { useState } from "react";
 import Hero from "@/components/layout/Hero";
 import PostList from "@/components/posts/PostList";
-import { posts as initialPosts } from "@/data/posts";
-import type { Post } from "@/types/post";
 
-export default function Home() {
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
 
-  function handleCreatePost(newPost: Post) {
-    setPosts((prev) => [newPost, ...prev]);
-  }
+export default async function Home() {
+  const response = await fetch("http://localhost:3000/api/posts");
+  const posts = await response.json();
 
   return (
     <>
