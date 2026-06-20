@@ -15,7 +15,7 @@ export default function PostCard({
 
             <p>{post.likes} likes</p>
 
-            <p>{post.comments}</p>
+            <p>{post.comments} comments</p>
 
             <p>Category: {post.category}</p>
 
