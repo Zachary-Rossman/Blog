@@ -147,7 +147,9 @@ project-root/
  
 ├── node_modules/
  
+├── .env.local
 ├── .gitignore
+├── middleware.ts
 ├── next-env.d.ts
 ├── next.config.ts
 ├── package-lock.json
@@ -183,9 +185,9 @@ project-root/
 
 ### Phase 4
 
-* [ ] Authentication
+* [x] Authentication
 * [x] User accounts
-* [ ] Protected routes
+* [x] Protected routes
 
 ### Phase 5
 
