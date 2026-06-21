@@ -7,6 +7,7 @@ export default function CreateUserForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [birthday, setBirthday] = useState("");
+  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,6 +16,7 @@ export default function CreateUserForm() {
     firstName,
     lastName,
     birthday,
+    email,
     username,
     password,
   };
@@ -60,6 +62,14 @@ export default function CreateUserForm() {
 
       <input
         type="text"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+        className="border p-2"
+      />
+
+      <input
+        type="text"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         placeholder="Username"
@@ -75,7 +85,7 @@ export default function CreateUserForm() {
       />
 
       <button
-        type="submit"
+        type="button"
         onClick={handleSubmit}
         className="bg-black text-white p-2"
       >

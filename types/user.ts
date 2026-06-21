@@ -2,6 +2,7 @@ export type CreateUserInput = {
     firstName: string;
     lastName: string;
     birthday: string;
+    email: string;
     username: string;
     password: string;
 }
@@ -11,6 +12,7 @@ export type User = {
     firstName: string;
     lastName: string;
     birthday: string;
+    email: string;
     username: string;
     password: string;
     publishedDate: string;
