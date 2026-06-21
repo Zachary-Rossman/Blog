@@ -53,7 +53,7 @@ export default function CreateUserForm() {
       />
 
       <input
-        type="text"
+        type="date"
         value={birthday}
         onChange={(e) => setBirthday(e.target.value)}
         placeholder="Birthday"

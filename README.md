@@ -93,9 +93,11 @@ project-root/
  
 ├── app/
     ├── api/
-        ├── users/
+        ├── login/
             └── route.ts
         ├── posts/
+            └── route.ts
+        ├── users/
             └── route.ts
     ├── dashboard/
         └── page.tsx 
@@ -106,6 +108,7 @@ project-root/
             └── page.tsx
         ├── new
             └── page.tsx 
+        └── page.tsx 
     ├── register/
         └── page.tsx 
     ├── favicon.ico
@@ -130,8 +133,7 @@ project-root/
  
 ├── lib/
     ├── mongodb.ts
-    ├── posts.ts
-    └── users.ts
+    └── posts.ts
 
 ├── models
     ├── Post.ts
