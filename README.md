@@ -184,7 +184,7 @@ project-root/
 ### Phase 4
 
 * [ ] Authentication
-* [ ] User accounts
+* [x] User accounts
 * [ ] Protected routes
 
 ### Phase 5
