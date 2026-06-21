@@ -75,11 +75,11 @@ export default function CreateUserForm() {
       />
 
       <button
-        type="button"
+        type="submit"
         onClick={handleSubmit}
         className="bg-black text-white p-2"
       >
-        Create Post
+        Create Account
       </button>
     </form>
   );
