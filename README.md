@@ -93,7 +93,8 @@ project-root/
  
 ├── app/
     ├── api/
-        ├── accounts/
+        ├── users/
+            └── route.ts
         ├── posts/
             └── route.ts
     ├── dashboard/
@@ -113,6 +114,9 @@ project-root/
     └── page.tsx
 
 ├── components/
+    ├── auth/
+        ├── CreateUserForm.tsx
+        └── LoginForm.tsx
     ├── layout/
         └── Hero.tsx
     ├── navigation/
@@ -123,21 +127,21 @@ project-root/
         └── PostList.tsx
     └── ui/
         └── Button.tsx
-
-├── data/
-    └── posts.ts
  
 ├── lib/
     ├── mongodb.ts
-    └── posts.ts
+    ├── posts.ts
+    └── users.ts
 
 ├── models
-    └── Post.ts
+    ├── Post.ts
+    └── User.ts
  
 ├── public/
 
 ├── types/
-    └── post.ts
+    ├── post.ts
+    └── user.ts
  
 ├── node_modules/
  
