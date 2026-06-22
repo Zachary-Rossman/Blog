@@ -1,16 +1,30 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { verifyToken } from "@/lib/auth";
 
-export function middleware(request: NextRequest) {
-    const authToken = request.cookies.get("auth_token")?.value;
+export const runtime = "nodejs";
 
-    const isLoggedIn = !!authToken;
+export function middleware(req: NextRequest) {
+  const token = req.cookies.get("auth_token")?.value;
 
-    const isDashboardRoute = request.nextUrl.pathname.startsWith("/dashboard");
+  if (!token || !verifyToken(token)) {
 
-    if (isDashboardRoute && !isLoggedIn) {
-        return NextResponse.redirect(new URL("/login", request.url));
+    const JWT_SECRET = process.env.JWT_SECRET;
+    
+    if (!JWT_SECRET) {
+        throw new Error("JWT_SECRET is not defined");
     }
 
-    return NextResponse.next();
+    console.log("TOKEN:", token);
+
+    console.log("VERIFY:", verifyToken(token));
+
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  return NextResponse.next();
 }
+
+export const config = {
+  matcher: ["/dashboard"],
+};

@@ -2,6 +2,7 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { signToken } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
@@ -29,7 +30,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. Create response
+    // 3. Create JWT
+    const token = signToken(user._id.toString());
+
+    // 4. Create response
     const response = NextResponse.json({
       message: "Login Successful",
       user: {
@@ -39,16 +43,17 @@ export async function POST(request: Request) {
       },
     });
 
-    // 4. Set cookie (THIS is the key part)
-    response.cookies.set("auth_token", user._id.toString(), {
+    // 5. Set cookie (THIS is the key part)
+    response.cookies.set("auth_token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
       sameSite: "strict",
       path: "/",
-      maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 60 * 60 * 24 * 7 // 1 week
     });
 
     return response;
+
   } catch (error) {
     console.error(error);
 

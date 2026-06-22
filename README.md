@@ -132,6 +132,7 @@ project-root/
         └── Button.tsx
  
 ├── lib/
+    ├── auth.ts
     ├── mongodb.ts
     └── posts.ts
 
