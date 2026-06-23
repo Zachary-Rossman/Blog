@@ -97,6 +97,8 @@ project-root/
             └── route.ts
         ├── logout/
             └── route.ts
+        ├── me/
+            └── route.ts
         ├── posts/
             └── route.ts
         ├── users/
