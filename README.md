@@ -95,6 +95,8 @@ project-root/
     ├── api/
         ├── login/
             └── route.ts
+        ├── logout/
+            └── route.ts
         ├── posts/
             └── route.ts
         ├── users/
