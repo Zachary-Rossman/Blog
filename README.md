@@ -122,6 +122,7 @@ project-root/
 
 ├── components/
     ├── auth/
+        ├── AuthProvider.tsx
         ├── CreateUserForm.tsx
         └── LoginForm.tsx
     ├── layout/
