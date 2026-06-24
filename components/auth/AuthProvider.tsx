@@ -39,10 +39,8 @@ export function AuthProvider({
       }
 
       const data = await response.json();
-
       setUser(data);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
       setUser(null);
     } finally {
       setLoading(false);

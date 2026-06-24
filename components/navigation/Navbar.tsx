@@ -8,6 +8,14 @@ export default function Navbar() {
   const router = useRouter();
   const { user, loading, refreshUser } = useAuth();
 
+ if (loading) {
+  return (
+    <nav className="p-4 border-b">
+      <p className="text-sm text-gray-500">Loading...</p>
+    </nav>
+  )
+ }
+
   async function handleLogout() {
     await fetch("/api/logout", {
       method: "POST",
