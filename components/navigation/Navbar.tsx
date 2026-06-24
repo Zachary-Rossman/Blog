@@ -2,64 +2,73 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 export default function Navbar() {
   const router = useRouter();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    async function checkAuth() {
-      const res = await fetch("/api/me");
-
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data);
-      } else {
-        setUser(null);
-      }
-    }
-
-    checkAuth();
-  }, []);
+  const { user, loading, refreshUser } = useAuth();
 
   async function handleLogout() {
     await fetch("/api/logout", {
       method: "POST",
     });
 
-    setUser(null);
+    await refreshUser(); // clears auth state in UI
     router.push("/login");
   }
 
   return (
-    <nav className="flex justify-between items-center px-6 py-3 border bg-cyan-200">
-
-      {/* LEFT NAV */}
+    <nav className="flex justify-between items-center p-4 border-b">
+      {/* LEFT SIDE LINKS */}
       <ul className="flex gap-4">
-        <li><Link href="/">Home</Link></li>
-        <li><Link href="/posts">Posts</Link></li>
+        <li>
+          <Link href="/">Home</Link>
+        </li>
 
-        {!user && (
-          <>
-            <li><Link href="/login">Login</Link></li>
-            <li><Link href="/register">Register</Link></li>
-          </>
+        <li>
+          <Link href="/posts">Posts</Link>
+        </li>
+
+        {user && (
+          <li>
+            <Link href="/dashboard">Dashboard</Link>
+          </li>
         )}
       </ul>
 
-      {/* RIGHT SIDE */}
-      <div>
-        {user && (
-          <button
-            onClick={handleLogout}
-            className="bg-black text-white px-3 py-1 rounded"
-          >
-            Logout
-          </button>
-        )}
-      </div>
+      {/* RIGHT SIDE AUTH */}
+      <ul className="flex gap-4 items-center">
+        {loading ? null : (
+          <>
+            {user ? (
+              <>
+                <li className="text-sm text-gray-600">
+                  {user.username}
+                </li>
 
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="text-red-500"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link href="/login">Login</Link>
+                </li>
+
+                <li>
+                  <Link href="/register">Register</Link>
+                </li>
+              </>
+            )}
+          </>
+        )}
+      </ul>
     </nav>
   );
 }
