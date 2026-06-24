@@ -21,40 +21,40 @@ export default function LoginForm() {
     setError(null);
 
     try {
-    const payload: LoginInput = {
-      email,
-      password,
-    };
+      const payload: LoginInput = {
+        email,
+        password,
+      };
 
-    const response = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-    const data = await response.json();
-    
-    if (!response.ok) {
-      setError(data.error || "Login failed");
-      return;
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Login failed");
+        return;
+      }
+
+      // refresh global auth state
+      await refreshUser();
+
+      // redirect to dashboard
+      router.push("/dashboard");
+    } catch (err) {
+      setError("Something went wrong");
+    } finally {
+      setLoading(false);
     }
-
-    // refresh global auth state
-    await refreshUser();
-
-    // redirect to dashboard
-    router.push("/dashboard");
-  } catch (err) {
-    setError("Something went wrong");
-  } finally {
-    setLoading(false);
   }
-}
 
   return (
-    <form 
+    <form
       onSubmit={handleSubmit}
       className="flex flex-col gap-4 max-w-md"
     >
@@ -64,6 +64,7 @@ export default function LoginForm() {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email"
         className="border p-2"
+        required
       />
 
       <input
@@ -72,6 +73,7 @@ export default function LoginForm() {
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
         className="border p-2"
+        required
       />
 
       {error && (
