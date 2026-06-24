@@ -29,14 +29,36 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">
-        Welcome, {user.username}
+    <div className="p-6 max-w-2xl">
+      <h1 className="text-3xl font-bold mb-4">
+        Dashboard
       </h1>
 
-      <p className="text-gray-600 mt-2">
-        Email: {user.email}
-      </p>
+      <div className="border p-4 rounded">
+        <h2 className="text-xl font-semibold">
+          Profile
+        </h2>
+
+        <p>
+          <strong>Email:</strong> {user?.email}
+        </p>
+
+        <p>
+          <strong>Username:</strong> {user?.username}
+        </p>
+      </div>
+
+      <div className="mt-6">
+        <h2 className="text-xl font-semibold mb-2">
+          Quick Actions
+        </h2>
+
+        <ul className="list-disc pl-6 text-gray-700">
+          <li>Create a new post</li>
+          <li>View your posts</li>
+          <li>Edit profile (future feature)</li>
+        </ul>
+      </div>
     </div>
   );
 }
