@@ -1,13 +1,26 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { LoginInput } from "@/types/user";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 export default function LoginForm() {
+  const router = useRouter();
+  const { refreshUser } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  async function handleSubmit() {
+  async function handleSubmit(e?: React.FormEvent) {
+    if (e) e.preventDefault();
+
+    setLoading(true);
+    setError(null);
+
+    try {
     const payload: LoginInput = {
       email,
       password,
@@ -22,11 +35,29 @@ export default function LoginForm() {
     });
 
     const data = await response.json();
-    console.log(data);
+    
+    if (!response.ok) {
+      setError(data.error || "Login failed");
+      return;
+    }
+
+    // refresh global auth state
+    await refreshUser();
+
+    // redirect to dashboard
+    router.push("/dashboard");
+  } catch (err) {
+    setError("Something went wrong");
+  } finally {
+    setLoading(false);
   }
+}
 
   return (
-    <form className="flex flex-col gap-4 max-w-md">
+    <form 
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-4 max-w-md"
+    >
       <input
         type="email"
         value={email}
@@ -43,12 +74,16 @@ export default function LoginForm() {
         className="border p-2"
       />
 
+      {error && (
+        <p className="text-red-500 text-sm">{error}</p>
+      )}
+
       <button
-        type="button"
-        onClick={handleSubmit}
+        type="submit"
+        disabled={loading}
         className="bg-black text-white p-2"
       >
-        Login
+        {loading ? "Logging in..." : "Login"}
       </button>
     </form>
   );
