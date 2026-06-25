@@ -1,23 +1,37 @@
-import type { Post } from "@/types/post"
+"use client";
 
-type PostCardProps = {
-    post: Post,
+type Post = {
+  _id: string;
+  title: string;
+  category: string;
+  author: string;
 };
 
-export default function PostCard({
-    post,
-}: PostCardProps) {
-    return (
-        <article className="bg-cyan-300 border">
-            <h2>{post.title}</h2>
+export default function PostCard({ post }: { post: Post }) {
+  return (
+    <div className="border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition">
+      
+      {/* Title */}
+      <h2 className="text-lg font-semibold mb-2">
+        {post.title}
+      </h2>
 
-            <p>{post.likes} likes</p>
+      {/* Meta line */}
+      <p className="text-sm text-gray-500 mb-3">
+        Posted by <span className="font-medium text-gray-700">{post.author}</span>
+        {" "}· {post.category}
+      </p>
 
-            <p>{post.comments} comments</p>
+      {/* Action row (future-proofed) */}
+      <div className="flex gap-3 text-sm text-gray-600">
+        <button className="hover:text-black transition">
+          👍 Like
+        </button>
 
-            <p>Category: {post.category}</p>
-
-            <p>Published: {post.publishedDate}</p>
-        </article>
-    )
+        <button className="hover:text-black transition">
+          💬 Comment
+        </button>
+      </div>
+    </div>
+  );
 }

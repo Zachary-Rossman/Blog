@@ -6,6 +6,7 @@ export type CreatePostInput = {
 export type Post = {
     _id: string;
     title: string;
+    authorId: string;
     category: string;
     publishedDate: string;
     likes: number;
