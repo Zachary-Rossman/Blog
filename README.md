@@ -118,6 +118,7 @@ project-root/
     ├── favicon.ico
     ├── globals.css
     ├── layout.tsx
+    ├── loading.tsx
     └── page.tsx
 
 ├── components/
