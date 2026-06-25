@@ -5,13 +5,11 @@ import type { CreatePostInput } from "@/types/post";
 
 export default function CreatePostForm() {
   const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
   const [ category, setCategory ] = useState("");
 
   async function handleSubmit() {
   const newPost: CreatePostInput = {
     title,
-    author,
     category
   };
 
@@ -34,13 +32,6 @@ export default function CreatePostForm() {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Post title"
-        className="border p-2"
-      />
-
-      <input
-        value={author}
-        onChange={(e) => setAuthor(e.target.value)}
-        placeholder="Author"
         className="border p-2"
       />
 

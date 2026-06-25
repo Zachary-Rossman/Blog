@@ -1,13 +1,11 @@
 export type CreatePostInput = {
     title: string;
-    author: string;
     category: string;
 }
 
 export type Post = {
     _id: string;
     title: string;
-    author: string;
     category: string;
     publishedDate: string;
     likes: number;

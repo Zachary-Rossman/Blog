@@ -20,7 +20,6 @@ export default async function PostPage({
     <h1 className="text-3xl font-bold">{post.title}</h1>
     
     <div className="text-sm text-gray-500">
-      <p>By {post.author}</p>
       <p>Category: {post.category}</p>
       <p>Published: {post.publishedDate}</p>
     </div>

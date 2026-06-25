@@ -11,8 +11,6 @@ export default function PostCard({
         <article className="bg-cyan-300 border">
             <h2>{post.title}</h2>
 
-            <p>By {post.author}</p>
-
             <p>{post.likes} likes</p>
 
             <p>{post.comments} comments</p>
