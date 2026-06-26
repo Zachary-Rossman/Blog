@@ -100,7 +100,7 @@ project-root/
         ├── me/
             └── route.ts
         ├── posts/
-            ├── login/
+            ├── [id]/
                 └── route.ts
             └── route.ts
         ├── users/

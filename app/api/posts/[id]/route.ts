@@ -1,69 +1,82 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-
-import { connectDB } from "@/lib/mongodb";
 import { verifyToken } from "@/lib/auth";
-
+import { connectDB } from "@/lib/mongodb";
 import Post from "@/models/Post";
 
-export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }>}) {
-    try {
-        await connectDB();
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  await connectDB();
 
-        const { id } = await params;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth_token")?.value;
 
-        // 1. Get token
-        const cookieStore = await cookies();
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-        const token = cookieStore.get("auth_token")?.value;
+  const payload = verifyToken(token);
+  if (!payload) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-        if (!token) {
-            return NextResponse.json(
-                { error: "Unauthorized" },
-                { status: 401 }
-            );
-        }
+  const post = await Post.findById(params.id);
 
-        // 2. Verify token
-        const payload = verifyToken(token);
+  if (!post) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
 
-        if (!payload) {
-            return NextResponse.json(
-                { error: "Unauthorized" },
-                { status: 401 }
-            );
-        }
+  // 🔐 ownership check
+  if (post.authorId !== payload.userId) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
-        // 3. Find post
-        const post = await Post.findById(id);
+  await Post.findByIdAndDelete(params.id);
 
-        if (!post) {
-            return NextResponse.json(
-                { error: "Post not found" },
-                { status: 404 }
-            );
-        }
+  return NextResponse.json({ success: true });
+};
 
-        // 4. Verify ownership
-        if (post.authorId.toString() !== payload.userId) {
-            return NextResponse.json(
-                { error: "Unauthorized" },
-                { status: 401 }
-            );
-        }
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  await connectDB();
 
-        // 5. Delete post
-        await Post.findByIdAndDelete(id);
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth_token")?.value;
 
-        return NextResponse.json({
-            message: "Post deleted",
-        });
-    } catch (error) {
-        console.error(error);
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-        return NextResponse.json(
-            { error: "Server Error" },
-            { status: 500 }
-        );
-    }
-}
+  const payload = verifyToken(token);
+  if (!payload) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const post = await Post.findById(params.id);
+
+  if (!post) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  // 🔐 ownership check
+  if (post.authorId !== payload.userId) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const body = await request.json();
+
+  const updated = await Post.findByIdAndUpdate(
+    params.id,
+    {
+      title: body.title,
+      category: body.category,
+    },
+    { new: true }
+  );
+
+  return NextResponse.json(updated);
+};
