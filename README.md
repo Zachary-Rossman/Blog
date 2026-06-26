@@ -111,6 +111,8 @@ project-root/
         └── page.tsx 
     ├── posts/
         ├──[id]
+            ├──edit
+                └── page.tsx
             └── page.tsx
         ├── new
             └── page.tsx 
@@ -200,8 +202,8 @@ project-root/
 
 ### Phase 5
 
-* [ ] Content management system
-* [ ] Post editor
+* [x] Content management system
+* [x] Post editor
 * [ ] Image uploads
 
 ### Phase 6
