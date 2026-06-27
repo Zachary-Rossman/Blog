@@ -174,43 +174,88 @@ project-root/
 
 ## Development Roadmap
 
-### Phase 1
+### Phase 1: Foundation
 
 * [x] Project setup
 * [x] Repository initialization
 * [x] README creation
 * [x] Basic routing
 
-### Phase 2
+### Phase 2: Frontend Foundation
 
 * [x] Navigation system
 * [x] Layout structure
 * [x] Blog post pages
 * [x] Styling implementation
 
-### Phase 3
+### Phase 3: Database & Data Layer
 
-* [x] Database integration
+* [x] MongoDB integration
+* [x] Mongoose models
 * [x] Post storage
 * [x] Dynamic routes
 
-### Phase 4
+### Phase 4: Authentication & Security
 
-* [x] Authentication
-* [x] User accounts
+* [x] User registration
+* [x] User login
+* [x] JWT authentication
 * [x] Protected routes
+* [x] Session persistence
+* [x] Ownership verification
 
-### Phase 5
+### Phase 5: Content Management System
 
-* [x] Content management system
-* [x] Post editor
+* [x] Create posts
+* [x] Read posts
+* [x] Update posts
+* [x] Delete posts
+* [x] User dashboard
+* [x] Author ownership controls
+* [ ] Full post body support
+* [ ] Category dropdown system
 * [ ] Image uploads
 
-### Phase 6
+### Phase 6: Search & Discovery
+
+* [ ] Search posts by keyword
+* [ ] Category filtering
+* [ ] Combined search + filtering
+* [ ] Improved posts directory
+* [ ] User-specific post views
+
+### Phase 7: User Experience
+
+* [ ] Global loading states
+* [ ] Error states
+* [ ] Success notications
+* [ ] Empty states
+* [ ] Mobile responsiveness review
+* [ ] Accessibility improvements
+
+### Phase 8: UI & Dashboard Polish
+
+* [ ] Homepage redesign
+* [ ] Dashboard redesign
+* [ ] Featured content sections
+* [ ] Improved post cards
+* [ ] Improved post detail pages
+
+### Phase 9: Social Features
+
+* [ ] Comments system
+* [ ] Post reactions
+* [ ] User profiles
+* [ ] Bookmarks
+* [ ] Draft posts
+
+### Phase 10: Production Readiness
 
 * [ ] Production deployment
 * [ ] Performance optimization
 * [ ] Final testing
+* [ ] Documentation review
+* [ ] Portfolio preparation
 
 ---
 
