@@ -215,7 +215,7 @@ project-root/
 * [x] Author ownership controls
 * [x] Full post body support
 * [x] Category dropdown system
-* [ ] Image uploads
+* [x] Image uploads
 
 ### Phase 6: Search & Discovery
 
