@@ -5,6 +5,7 @@ import Link from "next/link";
 type Post = {
   _id: string;
   title: string;
+  body: string;
   category: string;
   author: string;
 };

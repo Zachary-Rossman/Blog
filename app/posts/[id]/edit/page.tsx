@@ -1,77 +1,53 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
+import EditPostForm from "@/components/posts/EditPostForm";
+
+type Post = {
+  _id: string;
+  title: string;
+  body: string;
+  category: string;
+};
 
 export default function EditPostPage() {
-  const router = useRouter();
   const params = useParams();
 
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-
+  const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
 
-  // Load post
   useEffect(() => {
     async function loadPost() {
-      const res = await fetch("/api/posts");
-      const data = await res.json();
+      try {
+        const res = await fetch("/api/posts");
+        const data = await res.json();
 
-      const post = data.find((p: any) => p._id === params.id);
+        const found = data.find(
+          (p: Post) => p._id === params.id
+        );
 
-      if (!post) return;
-
-      setTitle(post.title);
-      setCategory(post.category);
-
-      setLoading(false);
+        setPost(found || null);
+      } finally {
+        setLoading(false);
+      }
     }
 
     loadPost();
   }, [params.id]);
 
-  // Save update
-  async function handleUpdate() {
-    if (saving) return;
-
-    setSaving(true);
-
-    try {
-      const res = await fetch(`/api/posts/${params.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          category,
-        }),
-      });
-
-      if (!res.ok) {
-        console.log("Update failed");
-        return;
-      }
-
-      router.push("/dashboard");
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  // Enter key support (same UX as login/create forms)
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter") {
-      handleUpdate();
-    }
-  }
-
   if (loading) {
     return (
       <div className="p-6">
         <p className="text-gray-500">Loading post...</p>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div className="p-6">
+        <p className="text-gray-500">Post not found</p>
       </div>
     );
   }
@@ -82,29 +58,12 @@ export default function EditPostPage() {
         Edit Post
       </h1>
 
-      <input
-        className="border p-2 w-full mb-3"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Title"
+      <EditPostForm
+        id={post._id}
+        initialTitle={post.title}
+        initialBody={post.body}
+        initialCategory={post.category}
       />
-
-      <input
-        className="border p-2 w-full mb-3"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Category"
-      />
-
-      <button
-        onClick={handleUpdate}
-        disabled={saving}
-        className="bg-black text-white px-4 py-2 disabled:opacity-50"
-      >
-        {saving ? "Saving..." : "Save Changes"}
-      </button>
     </div>
   );
 }

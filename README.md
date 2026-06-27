@@ -136,6 +136,7 @@ project-root/
         └── Navbar.tsx
     ├── posts
         ├── CreatePostForm.tsx
+        ├── EditPostForm.tsx
         ├── PostCard.tsx
         └── PostList.tsx
     └── ui/

@@ -29,8 +29,10 @@ export default async function PostPage({
         {post.category} · by {post.author}
       </p>
 
-      <div className="border-t pt-6">
-        <p>This is where your post content will go.</p>
+      <div className="prose max-w-none mt-8">
+        <p className="whitespace-pre-wrap">
+          {post.body}
+        </p>
       </div>
     </main>
   );

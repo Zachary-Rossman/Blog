@@ -8,6 +8,7 @@ export default function CreatePostForm() {
   const router = useRouter();
 
   const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -15,9 +16,25 @@ export default function CreatePostForm() {
     if (loading) return;
 
     setLoading(true);
+    
+    if (!title.trim()) {
+      alert("Title is required");
+      return;
+    }
+
+    if (!category) {
+      alert("Please select a category");
+      return;
+    }
+
+    if (!body.trim()) {
+      alert("Body is required");
+      return;
+    }
 
     const newPost: CreatePostInput = {
       title,
+      body,
       category,
     };
 
@@ -32,7 +49,10 @@ export default function CreatePostForm() {
 
       const data = await response.json();
 
-      console.log(data);
+      if (!response.ok) {
+        console.error(data);
+        return;
+      }
 
       // redirect to posts feed after creation
       router.push("/posts");
@@ -42,17 +62,10 @@ export default function CreatePostForm() {
     }
   }
 
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleSubmit();
-    }
-  }
-
   return (
     <form
       className="flex flex-col gap-4 max-w-md"
-      onKeyDown={handleKeyDown}
+      onSubmit={handleSubmit}
     >
       <input
         value={title}
@@ -62,10 +75,50 @@ export default function CreatePostForm() {
         disabled={loading}
       />
 
-      <input
+      <select
         value={category}
         onChange={(e) => setCategory(e.target.value)}
-        placeholder="Category"
+        className="border p-2 rounded w-full mb-3"
+        disabled={loading}
+      >
+        <option value="">
+          Select Category
+        </option>
+
+        <option value="Technology">
+          Technology
+        </option>
+
+        <option value="Programming">
+          Programming
+        </option>
+
+        <option value="Career">
+          Career
+        </option>
+
+        <option value="Gaming">
+          Gaming
+        </option>
+
+        <option value="Design">
+          Design
+        </option>
+
+        <option value="Business">
+          Business
+        </option>
+
+        <option value="Tutorial">
+          Tutorial
+        </option>
+      </select>
+
+      <textarea
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        placeholder="What would you like to share?"
+        rows={10}
         className="border p-2"
         disabled={loading}
       />

@@ -17,6 +17,7 @@ export async function GET() {
       return {
         _id: post._id,
         title: post.title,
+        body: post.body,
         category: post.category,
         publishedDate: post.publishedDate,
         likes: post.likes,
@@ -71,6 +72,7 @@ export async function GET() {
       // 5. Create post with server-owned identity
       const post = await Post.create({
         title: body.title,
+        body: body.body,
         category: body.category,
         authorId: user._id,
       });

@@ -105,6 +105,7 @@ export async function PUT(
       id,
       {
         title: body.title,
+        body: body.body,
         category: body.category,
       },
       { new: true }
