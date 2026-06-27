@@ -8,6 +8,7 @@ type Post = {
   body: string;
   category: string;
   author: string;
+  imageUrl?: string;
 };
 
 export default function PostCard({
@@ -26,22 +27,34 @@ export default function PostCard({
     );
   }
 
+  if (!post) return null;
+
   return (
-    <Link href={`/posts/${post!._id}`}>
+    <Link href={`/posts/${post._id}`}>
       <div className="border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition cursor-pointer">
 
+        {/* IMAGE */}
+        {post.imageUrl && (
+          <img
+            src={post.imageUrl}
+            alt={post.title}
+            className="w-full h-40 object-cover rounded mb-3"
+          />
+        )}
+
+        {/* TITLE */}
         <h2 className="text-lg font-semibold mb-2">
-          {post!.title}
+          {post.title}
         </h2>
 
+        {/* META */}
         <p className="text-sm text-gray-500">
           Posted by{" "}
           <span className="font-medium text-gray-700">
-            {post!.author}
+            {post.author}
           </span>{" "}
-          · {post!.category}
+          · {post.category}
         </p>
-
       </div>
     </Link>
   );

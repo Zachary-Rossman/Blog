@@ -213,8 +213,8 @@ project-root/
 * [x] Delete posts
 * [x] User dashboard
 * [x] Author ownership controls
-* [ ] Full post body support
-* [ ] Category dropdown system
+* [x] Full post body support
+* [x] Category dropdown system
 * [ ] Image uploads
 
 ### Phase 6: Search & Discovery

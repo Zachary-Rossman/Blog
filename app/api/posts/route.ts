@@ -19,6 +19,7 @@ export async function GET() {
         title: post.title,
         body: post.body,
         category: post.category,
+        imageUrl: post.imageUrl,
         publishedDate: post.publishedDate,
         likes: post.likes,
         comments: post.comments,
@@ -74,6 +75,7 @@ export async function GET() {
         title: body.title,
         body: body.body,
         category: body.category,
+        imageUrl: body.imageUrl,
         authorId: user._id,
       });
 

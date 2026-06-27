@@ -10,6 +10,8 @@ export default function CreatePostForm() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [category, setCategory] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit() {
@@ -36,6 +38,7 @@ export default function CreatePostForm() {
       title,
       body,
       category,
+      imageUrl: imageUrl || undefined,
     };
 
     try {
@@ -113,6 +116,14 @@ export default function CreatePostForm() {
           Tutorial
         </option>
       </select>
+
+      <input
+        value={imageUrl}
+        onChange={(e) => setImageUrl(e.target.value)}
+        placeholder="Image URL (optional)"
+        className="border p-2 rounded w-full mb-3"
+        disabled={loading}
+      />
 
       <textarea
         value={body}

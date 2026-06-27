@@ -107,6 +107,7 @@ export async function PUT(
         title: body.title,
         body: body.body,
         category: body.category,
+        imageUrl: body.imageUrl
       },
       { new: true }
     );

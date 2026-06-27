@@ -7,6 +7,7 @@ import EditPostForm from "@/components/posts/EditPostForm";
 type Post = {
   _id: string;
   title: string;
+  imageUrl: string;
   body: string;
   category: string;
 };
@@ -62,6 +63,7 @@ export default function EditPostPage() {
         id={post._id}
         initialTitle={post.title}
         initialBody={post.body}
+        initialImageUrl={post.imageUrl}
         initialCategory={post.category}
       />
     </div>

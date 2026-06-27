@@ -5,6 +5,7 @@ type Post = {
   title: string;
   category: string;
   author: string;
+  imageUrl: string;
 };
 
 export default function PostList({

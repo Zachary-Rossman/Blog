@@ -8,6 +8,7 @@ type EditPostFormProps = {
   initialTitle: string;
   initialBody: string;
   initialCategory: string;
+  initialImageUrl: string;
 };
 
 export default function EditPostForm({
@@ -15,12 +16,14 @@ export default function EditPostForm({
   initialTitle,
   initialBody,
   initialCategory,
+  initialImageUrl,
 }: EditPostFormProps) {
   const router = useRouter();
 
   const [title, setTitle] = useState(initialTitle);
   const [body, setBody] = useState(initialBody);
   const [category, setCategory] = useState(initialCategory);
+  const [imageUrl, setImageUrl] = useState(initialImageUrl);
 
   const [saving, setSaving] = useState(false);
 
@@ -39,6 +42,7 @@ export default function EditPostForm({
           title,
           body,
           category,
+          imageUrl,
         }),
       });
 
@@ -118,8 +122,16 @@ export default function EditPostForm({
         value="Tutorial">
             Tutorial
       </option>
-      
       </select>
+
+      <input
+        value={imageUrl}
+        onChange={(e) => setImageUrl(e.target.value)}
+        placeholder="Image URL (optional)"
+        className="border p-2 rounded w-full mb-3"
+        disabled={saving}
+      />
+  
 
       {/* BODY */}
       <textarea
