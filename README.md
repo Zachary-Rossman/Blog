@@ -121,10 +121,12 @@ project-root/
         └── page.tsx 
     ├── register/
         └── page.tsx 
+    ├── error.tsx
     ├── favicon.ico
     ├── globals.css
     ├── layout.tsx
     ├── loading.tsx
+    ├── not-found.tsx
     └── page.tsx
 
 ├── components/
