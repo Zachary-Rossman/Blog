@@ -219,10 +219,10 @@ project-root/
 
 ### Phase 6: Search & Discovery
 
-* [ ] Search posts by keyword
-* [ ] Category filtering
-* [ ] Combined search + filtering
-* [ ] Improved posts directory
+* [x] Search posts by keyword
+* [x] Category filtering
+* [x] Combined search + filtering
+* [x] Improved posts directory
 * [ ] User-specific post views
 
 ### Phase 7: User Experience
