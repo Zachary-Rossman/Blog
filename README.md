@@ -102,6 +102,8 @@ project-root/
         ├── posts/
             ├── [id]/
                 └── route.ts
+            ├── mine/
+                └── route.ts
             └── route.ts
         ├── users/
             └── route.ts
@@ -223,7 +225,7 @@ project-root/
 * [x] Category filtering
 * [x] Combined search + filtering
 * [x] Improved posts directory
-* [ ] User-specific post views
+* [x] User-specific post views
 
 ### Phase 7: User Experience
 

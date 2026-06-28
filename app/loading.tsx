@@ -12,14 +12,17 @@ export default function Loading() {
       <div className="h-6 bg-gray-200 w-1/4 rounded animate-pulse" />
 
       {/* Post skeletons */}
-      <div className="space-y-4">
-        {Array.from({ length: 5 }).map((_, i) => (
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="border p-4 rounded animate-pulse space-y-3"
+            className="border rounded-lg p-4 bg-white shadow-sm animate-pulse"
           >
-            <div className="h-5 bg-gray-200 w-3/4 rounded" />
-            <div className="h-3 bg-gray-200 w-1/2 rounded" />
+            <div className="h-40 bh-gray-200 rounded mb-3" />
+            
+            <div className="h-5 bg-gray-200 rounded w-3/4 mb-3" />
+
+            <div className="h-3 bg-gray-200 rounded w-1/2" />
           </div>
         ))}
       </div>
