@@ -1,7 +1,17 @@
+import { cookies } from "next/headers";
 import Link from "next/link";
 import PostList from "@/components/posts/PostList";
+import { verifyToken } from "@/lib/auth";
 
 export default async function PostsPage() {
+  const cookieStore = await cookies();
+
+  const token = cookieStore.get("auth_token")?.value;
+
+  const isLoggedIn = !!(
+    token && verifyToken(token)
+  );
+
   const res = await fetch("http://localhost:3000/api/posts", {
     cache: "no-store",
   });
@@ -20,12 +30,14 @@ export default async function PostsPage() {
           </p>
         </div>
 
-        <Link
-          href="/posts/new"
-          className="bg-black text-white px-4 py-2 rounded"
-        >
-          + New Post
-        </Link>
+        {isLoggedIn && (
+          <Link
+            href="/posts/new"
+            className="bg-black text-white px-4 py-2 rounded-2"
+          >
+            + New Post
+          </Link>
+        )}
       </div>
 
       {/* Feed */}
