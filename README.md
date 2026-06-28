@@ -144,7 +144,11 @@ project-root/
         ├── PostCard.tsx
         └── PostList.tsx
     └── ui/
+        ├── Toast.tsx
         └── Button.tsx
+
+├── hooks/
+    └── useToast.ts
  
 ├── lib/
     ├── auth.ts
