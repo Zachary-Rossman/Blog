@@ -13,26 +13,35 @@ export default function CreatePostForm() {
   const [imageUrl, setImageUrl] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  async function handleSubmit() {
+  async function handleSubmit(e?: React.FormEvent) {
+    e?.preventDefault();
+
     if (loading) return;
 
-    setLoading(true);
-    
+    // reset previous error
+    setError("");
+
+    // =========================
+    // 1. CLIENT VALIDATION
+    // =========================
     if (!title.trim()) {
-      alert("Title is required");
+      setError("Title is required");
       return;
     }
 
     if (!category) {
-      alert("Please select a category");
+      setError("Please select a category");
       return;
     }
 
     if (!body.trim()) {
-      alert("Body is required");
+      setError("Body is required");
       return;
     }
+
+    setLoading(true);
 
     const newPost: CreatePostInput = {
       title,
@@ -53,13 +62,14 @@ export default function CreatePostForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error(data);
+        setError(data?.error || "Failed to create post");
         return;
       }
 
-      // redirect to posts feed after creation
       router.push("/posts");
-
+    } catch (err) {
+      console.error(err);
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -70,6 +80,13 @@ export default function CreatePostForm() {
       className="flex flex-col gap-4 max-w-md"
       onSubmit={handleSubmit}
     >
+      {/* ERROR DISPLAY */}
+      {error && (
+        <div className="border border-red-300 bg-red-50 text-red-700 p-3 rounded">
+          {error}
+        </div>
+      )}
+
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
@@ -84,37 +101,14 @@ export default function CreatePostForm() {
         className="border p-2 rounded w-full mb-3"
         disabled={loading}
       >
-        <option value="">
-          Select Category
-        </option>
-
-        <option value="Technology">
-          Technology
-        </option>
-
-        <option value="Programming">
-          Programming
-        </option>
-
-        <option value="Career">
-          Career
-        </option>
-
-        <option value="Gaming">
-          Gaming
-        </option>
-
-        <option value="Design">
-          Design
-        </option>
-
-        <option value="Business">
-          Business
-        </option>
-
-        <option value="Tutorial">
-          Tutorial
-        </option>
+        <option value="">Select Category</option>
+        <option value="Technology">Technology</option>
+        <option value="Programming">Programming</option>
+        <option value="Career">Career</option>
+        <option value="Gaming">Gaming</option>
+        <option value="Design">Design</option>
+        <option value="Business">Business</option>
+        <option value="Tutorial">Tutorial</option>
       </select>
 
       <input
@@ -135,8 +129,7 @@ export default function CreatePostForm() {
       />
 
       <button
-        type="button"
-        onClick={handleSubmit}
+        type="submit"
         disabled={loading}
         className="bg-black text-white p-2 disabled:opacity-50"
       >

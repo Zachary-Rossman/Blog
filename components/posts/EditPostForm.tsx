@@ -26,9 +26,32 @@ export default function EditPostForm({
   const [imageUrl, setImageUrl] = useState(initialImageUrl);
 
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-  async function handleUpdate() {
+  async function handleUpdate(e?: React.FormEvent) {
+    e?.preventDefault();
+
     if (saving) return;
+
+    setError("");
+
+    // =========================
+    // VALIDATION
+    // =========================
+    if (!title.trim()) {
+      setError("Title is required");
+      return;
+    }
+
+    if (!category) {
+      setError("Please select a category");
+      return;
+    }
+
+    if (!body.trim()) {
+      setError("Body is required");
+      return;
+    }
 
     setSaving(true);
 
@@ -46,32 +69,36 @@ export default function EditPostForm({
         }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        console.log("Update failed");
+        setError(data?.error || "Failed to update post");
         return;
       }
 
-      // redirect to post after update
       router.push(`/posts/${id}`);
+    } catch (err) {
+      console.error(err);
+      setError("Network error. Please try again.");
     } finally {
       setSaving(false);
     }
   }
 
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter") {
-      handleUpdate();
-    }
-  }
-
   return (
-    <div>
+    <form onSubmit={handleUpdate}>
+      {/* ERROR MESSAGE */}
+      {error && (
+        <div className="border border-red-300 bg-red-50 text-red-700 p-3 rounded mb-3">
+          {error}
+        </div>
+      )}
+
       {/* TITLE */}
       <input
         className="border p-2 w-full mb-3"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        onKeyDown={handleKeyDown}
         placeholder="Title"
         disabled={saving}
       />
@@ -83,47 +110,17 @@ export default function EditPostForm({
         className="border p-2 rounded w-full mb-3"
         disabled={saving}
       >
-      <option 
-        value="">
-            Select Category
-      </option>
-
-      <option 
-        value="Technology">
-            Technology
-      </option>
-
-      <option 
-        value="Programming">
-            Programming
-      </option>
-
-      <option 
-        value="Career">
-            Career
-      </option>
-
-      <option 
-        value="Gaming">
-            Gaming
-      </option>
-
-      <option 
-        value="Design">
-            Design
-      </option>
-
-      <option 
-        value="Business">
-            Business
-      </option>
-      
-      <option 
-        value="Tutorial">
-            Tutorial
-      </option>
+        <option value="">Select Category</option>
+        <option value="Technology">Technology</option>
+        <option value="Programming">Programming</option>
+        <option value="Career">Career</option>
+        <option value="Gaming">Gaming</option>
+        <option value="Design">Design</option>
+        <option value="Business">Business</option>
+        <option value="Tutorial">Tutorial</option>
       </select>
 
+      {/* IMAGE */}
       <input
         value={imageUrl}
         onChange={(e) => setImageUrl(e.target.value)}
@@ -131,7 +128,6 @@ export default function EditPostForm({
         className="border p-2 rounded w-full mb-3"
         disabled={saving}
       />
-  
 
       {/* BODY */}
       <textarea
@@ -145,12 +141,12 @@ export default function EditPostForm({
 
       {/* SAVE BUTTON */}
       <button
-        onClick={handleUpdate}
+        type="submit"
         disabled={saving}
         className="bg-black text-white px-4 py-2 disabled:opacity-50"
       >
         {saving ? "Saving..." : "Save Changes"}
       </button>
-    </div>
+    </form>
   );
 }

@@ -229,8 +229,8 @@ project-root/
 
 ### Phase 7: User Experience
 
-* [ ] Global loading states
-* [ ] Error states
+* [x] Global loading states
+* [x] Error states
 * [ ] Success notications
 * [ ] Empty states
 * [ ] Mobile responsiveness review

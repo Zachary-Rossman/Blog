@@ -11,14 +11,31 @@ export default function LoginForm() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e?: React.FormEvent) {
     if (e) e.preventDefault();
 
-    setLoading(true);
+    if (loading) return;
+
     setError(null);
+
+    // =========================
+    // VALIDATION
+    // =========================
+    if (!email.trim()) {
+      setError("Email is required");
+      return;
+    }
+
+    if (!password.trim()) {
+      setError("Password is required");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const payload: LoginInput = {
@@ -41,13 +58,12 @@ export default function LoginForm() {
         return;
       }
 
-      // refresh global auth state
       await refreshUser();
 
-      // redirect to dashboard
       router.push("/dashboard");
     } catch (err) {
-      setError("Something went wrong");
+      console.error(err);
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -58,13 +74,17 @@ export default function LoginForm() {
       onSubmit={handleSubmit}
       className="flex flex-col gap-4 max-w-md"
     >
+      {error && (
+        <p className="text-red-500 text-sm">{error}</p>
+      )}
+
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email"
         className="border p-2"
-        required
+        disabled={loading}
       />
 
       <input
@@ -73,17 +93,13 @@ export default function LoginForm() {
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
         className="border p-2"
-        required
+        disabled={loading}
       />
-
-      {error && (
-        <p className="text-red-500 text-sm">{error}</p>
-      )}
 
       <button
         type="submit"
         disabled={loading}
-        className="bg-black text-white p-2"
+        className="bg-black text-white p-2 disabled:opacity-50"
       >
         {loading ? "Logging in..." : "Login"}
       </button>
