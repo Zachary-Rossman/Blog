@@ -239,7 +239,7 @@ project-root/
 * [x] Success notications
 * [x] Empty states
 * [x] Mobile responsiveness review
-* [ ] Accessibility improvements
+* [x] Accessibility improvements
 
 ### Phase 8: UI & Dashboard Polish
 
