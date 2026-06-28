@@ -8,72 +8,54 @@ export default function Navbar() {
   const router = useRouter();
   const { user, loading, refreshUser } = useAuth();
 
- if (loading) {
-  return (
-    <nav className="p-4 border-b">
-      <p className="text-sm text-gray-500">Loading...</p>
-    </nav>
-  )
- }
-
   async function handleLogout() {
-    await fetch("/api/logout", {
-      method: "POST",
-    });
-
-    await refreshUser(); // clears auth state in UI
+    await fetch("/api/logout", { method: "POST" });
+    await refreshUser();
     router.push("/login");
   }
 
   return (
-    <nav className="flex justify-between items-center p-4 border-b">
-      {/* LEFT SIDE LINKS */}
-      <ul className="flex gap-4">
-        <li>
-          <Link href="/">Home</Link>
-        </li>
-
-        <li>
-          <Link href="/posts">Posts</Link>
-        </li>
+    <nav
+      aria-label="Main navigation"
+      className="flex justify-between items-center p-4 border-b"
+    >
+      {/* LEFT */}
+      <ul className="flex gap-4" role="list">
+        <li><Link href="/">Home</Link></li>
+        <li><Link href="/posts">Posts</Link></li>
 
         {user && (
-          <li>
-            <Link href="/dashboard">Dashboard</Link>
-          </li>
+          <li><Link href="/dashboard">Dashboard</Link></li>
         )}
       </ul>
 
-      {/* RIGHT SIDE AUTH */}
-      <ul className="flex gap-4 items-center">
-        {loading ? null : (
+      {/* RIGHT */}
+      <ul className="flex gap-4 items-center" role="list">
+        {loading ? (
+          <li className="text-sm text-gray-500">Loading...</li>
+        ) : user ? (
           <>
-            {user ? (
-              <>
-                <li className="text-sm text-gray-600">
-                  {user.username}
-                </li>
+            <li
+              className="text-sm text-gray-600"
+              aria-label={`Logged in as ${user.username}`}
+            >
+              {user.username}
+            </li>
 
-                <li>
-                  <button
-                    onClick={handleLogout}
-                    className="text-red-500"
-                  >
-                    Logout
-                  </button>
-                </li>
-              </>
-            ) : (
-              <>
-                <li>
-                  <Link href="/login">Login</Link>
-                </li>
-
-                <li>
-                  <Link href="/register">Register</Link>
-                </li>
-              </>
-            )}
+            <li>
+              <button
+                onClick={handleLogout}
+                className="text-red-500"
+                aria-label="Logout"
+              >
+                Logout
+              </button>
+            </li>
+          </>
+        ) : (
+          <>
+            <li><Link href="/login">Login</Link></li>
+            <li><Link href="/register">Register</Link></li>
           </>
         )}
       </ul>

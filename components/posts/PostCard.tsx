@@ -20,7 +20,10 @@ export default function PostCard({
 }) {
   if (loading) {
     return (
-      <div className="border rounded-lg p-4 animate-pulse space-y-3">
+      <div
+        className="border rounded-lg p-4 animate-pulse space-y-3"
+        aria-hidden="true"
+      >
         <div className="h-5 bg-gray-200 w-3/4 rounded" />
         <div className="h-3 bg-gray-200 w-1/2 rounded" />
       </div>
@@ -30,8 +33,12 @@ export default function PostCard({
   if (!post) return null;
 
   return (
-    <Link href={`/posts/${post._id}`}>
-      <div className="border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition cursor-pointer">
+    <article>
+      <Link
+        href={`/posts/${post._id}`}
+        className="block border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition focus:outline-none focus:ring-2 focus:ring-black"
+        aria-label={`Read post: ${post.title}`}
+      >
 
         {/* IMAGE */}
         {post.imageUrl && (
@@ -39,6 +46,7 @@ export default function PostCard({
             src={post.imageUrl}
             alt={post.title}
             className="w-full h-40 object-cover rounded mb-3"
+            loading="lazy"
           />
         )}
 
@@ -55,7 +63,8 @@ export default function PostCard({
           </span>{" "}
           · {post.category}
         </p>
-      </div>
-    </Link>
+
+      </Link>
+    </article>
   );
 }

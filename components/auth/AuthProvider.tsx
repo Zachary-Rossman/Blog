@@ -16,10 +16,13 @@ type User = {
 type AuthContextType = {
   user: User | null;
   loading: boolean;
+  refreshing: boolean;
   refreshUser: () => Promise<void>;
 };
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 export function AuthProvider({
   children,
@@ -27,10 +30,15 @@ export function AuthProvider({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState<User | null>(null);
+
+  // 🔑 we split "initial load" vs "refresh"
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   async function refreshUser() {
     try {
+      setRefreshing(true);
+
       const response = await fetch("/api/me");
 
       if (!response.ok) {
@@ -44,6 +52,7 @@ export function AuthProvider({
       setUser(null);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   }
 
@@ -56,6 +65,7 @@ export function AuthProvider({
       value={{
         user,
         loading,
+        refreshing,
         refreshUser,
       }}
     >

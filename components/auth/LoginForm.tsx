@@ -59,7 +59,6 @@ export default function LoginForm() {
       }
 
       await refreshUser();
-
       router.push("/dashboard");
     } catch (err) {
       console.error(err);
@@ -73,33 +72,56 @@ export default function LoginForm() {
     <form
       onSubmit={handleSubmit}
       className="flex flex-col gap-4 max-w-md"
+      aria-describedby={error ? "login-error" : undefined}
     >
+      {/* ERROR MESSAGE (ACCESSIBLE) */}
       {error && (
-        <p className="text-red-500 text-sm">{error}</p>
+        <div
+          id="login-error"
+          role="alert"
+          aria-live="polite"
+          className="text-red-600 text-sm border border-red-200 bg-red-50 p-2 rounded"
+        >
+          {error}
+        </div>
       )}
 
+      {/* EMAIL */}
+      <label htmlFor="email" className="text-sm font-medium">
+        Email
+      </label>
       <input
+        id="email"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
+        placeholder="Enter your email"
         className="border p-2"
         disabled={loading}
+        autoComplete="email"
       />
 
+      {/* PASSWORD */}
+      <label htmlFor="password" className="text-sm font-medium">
+        Password
+      </label>
       <input
+        id="password"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
+        placeholder="Enter your password"
         className="border p-2"
         disabled={loading}
+        autoComplete="current-password"
       />
 
+      {/* BUTTON */}
       <button
         type="submit"
         disabled={loading}
         className="bg-black text-white p-2 disabled:opacity-50"
+        aria-busy={loading}
       >
         {loading ? "Logging in..." : "Login"}
       </button>

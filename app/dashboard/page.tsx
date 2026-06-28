@@ -97,55 +97,70 @@ export default function DashboardPage() {
           Create Post
         </button>
       </div>
-
+      
       {/* POSTS */}
       <h2 className="text-2xl font-semibold mb-4">
         My Posts
       </h2>
-
+      
       {posts.length === 0 ? (
-        <p className="text-gray-500">
-          You haven't created any posts yet.
-        </p>
+        <div className="border rounded-lg p-8 text-center space-y-4">
+          <h3 className="text-lg font-semibold">
+            No posts yet
+          </h3>
+          
+          <p className="text-gray-500">
+            You haven’t created any posts. Start by writing your first one.
+          </p>
+          
+          <button
+          onClick={() => router.push("/posts/new")}
+          className="bg-black text-white px-4 py-2 rounded"
+          >
+            Create Your First Post
+          </button>
+          
+          </div>
+        
       ) : (
-        <div className="space-y-4">
-          {posts.map((post) => (
-            <div
-              key={post._id}
-              className="border p-4 rounded flex justify-between items-center"
-            >
-              <div>
-                <h3 className="font-semibold">
-                  {post.title}
-                </h3>
-
-                <p className="text-sm text-gray-500">
-                  {post.category}
-                </p>
-              </div>
-
-              <div className="flex gap-2">
-                <button
-                  onClick={() =>
-                    router.push(`/posts/${post._id}/edit`)
-                  }
-                  className="px-3 py-1 border rounded"
-                >
-                  Edit
-                </button>
-
-                <button
-                  onClick={() => handleDelete(post._id)}
-                  className="px-3 py-1 bg-red-500 text-white rounded"
-                >
-                  Delete
-                </button>
-              </div>
+      
+      <div className="space-y-4">
+        {posts.map((post) => (
+          <div
+          key={post._id}
+          className="border p-4 rounded flex justify-between items-center"
+          >
+            <div>
+              <h3 className="font-semibold">
+                {post.title}
+              </h3>
+              
+              <p className="text-sm text-gray-500">
+                {post.category}
+              </p>
             </div>
-          ))}
-        </div>
-      )}
-
-    </div>
+            
+            <div className="flex gap-2">
+              <button
+              onClick={() => 
+                router.push(`/posts/${post._id}/edit`)
+              }
+              className="px-3 py-1 border rounded"
+              >
+                Edit
+              </button>
+              
+              <button
+              onClick={() => handleDelete(post._id)}
+              className="px-3 py-1 bg-red-500 text-white rounded"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
   );
 }

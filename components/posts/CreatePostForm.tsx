@@ -20,11 +20,10 @@ export default function CreatePostForm() {
 
     if (loading) return;
 
-    // reset previous error
     setError("");
 
     // =========================
-    // 1. CLIENT VALIDATION
+    // VALIDATION
     // =========================
     if (!title.trim()) {
       setError("Title is required");
@@ -77,61 +76,111 @@ export default function CreatePostForm() {
 
   return (
     <form
-      className="flex flex-col gap-4 max-w-md"
       onSubmit={handleSubmit}
+      className="flex flex-col gap-4 max-w-md"
+      aria-describedby={error ? "form-error" : undefined}
     >
-      {/* ERROR DISPLAY */}
+      {/* =========================
+          ERROR STATE (ACCESSIBLE)
+      ========================= */}
       {error && (
-        <div className="border border-red-300 bg-red-50 text-red-700 p-3 rounded">
+        <div
+          id="form-error"
+          className="border border-red-300 bg-red-50 text-red-700 p-3 rounded"
+          role="alert"
+        >
           {error}
         </div>
       )}
 
-      <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Post title"
-        className="border p-2"
-        disabled={loading}
-      />
+      {/* =========================
+          TITLE
+      ========================= */}
+      <div className="flex flex-col gap-1">
+        <label htmlFor="title" className="text-sm font-medium">
+          Title
+        </label>
 
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className="border p-2 rounded w-full mb-3"
-        disabled={loading}
-      >
-        <option value="">Select Category</option>
-        <option value="Technology">Technology</option>
-        <option value="Programming">Programming</option>
-        <option value="Career">Career</option>
-        <option value="Gaming">Gaming</option>
-        <option value="Design">Design</option>
-        <option value="Business">Business</option>
-        <option value="Tutorial">Tutorial</option>
-      </select>
+        <input
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="border p-2 rounded"
+          disabled={loading}
+          aria-invalid={!!error}
+        />
+      </div>
 
-      <input
-        value={imageUrl}
-        onChange={(e) => setImageUrl(e.target.value)}
-        placeholder="Image URL (optional)"
-        className="border p-2 rounded w-full mb-3"
-        disabled={loading}
-      />
+      {/* =========================
+          CATEGORY
+      ========================= */}
+      <div className="flex flex-col gap-1">
+        <label htmlFor="category" className="text-sm font-medium">
+          Category
+        </label>
 
-      <textarea
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
-        placeholder="What would you like to share?"
-        rows={10}
-        className="border p-2"
-        disabled={loading}
-      />
+        <select
+          id="category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="border p-2 rounded w-full"
+          disabled={loading}
+          aria-invalid={!!error}
+        >
+          <option value="">Select Category</option>
+          <option value="Technology">Technology</option>
+          <option value="Programming">Programming</option>
+          <option value="Career">Career</option>
+          <option value="Gaming">Gaming</option>
+          <option value="Design">Design</option>
+          <option value="Business">Business</option>
+          <option value="Tutorial">Tutorial</option>
+        </select>
+      </div>
 
+      {/* =========================
+          IMAGE URL
+      ========================= */}
+      <div className="flex flex-col gap-1">
+        <label htmlFor="imageUrl" className="text-sm font-medium">
+          Image URL (optional)
+        </label>
+
+        <input
+          id="imageUrl"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          className="border p-2 rounded"
+          disabled={loading}
+        />
+      </div>
+
+      {/* =========================
+          BODY
+      ========================= */}
+      <div className="flex flex-col gap-1">
+        <label htmlFor="body" className="text-sm font-medium">
+          Body
+        </label>
+
+        <textarea
+          id="body"
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          rows={10}
+          className="border p-2 rounded"
+          disabled={loading}
+          aria-invalid={!!error}
+        />
+      </div>
+
+      {/* =========================
+          SUBMIT
+      ========================= */}
       <button
         type="submit"
         disabled={loading}
-        className="bg-black text-white p-2 disabled:opacity-50"
+        className="bg-black text-white p-2 rounded disabled:opacity-50"
       >
         {loading ? "Creating..." : "Create Post"}
       </button>

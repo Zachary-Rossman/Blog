@@ -67,7 +67,7 @@ export default function CreateUserForm() {
 
       setTimeout(() => {
         router.push("/login");
-      }, 1000);
+      }, 1200);
 
     } catch (err) {
       console.error(err);
@@ -81,72 +81,122 @@ export default function CreateUserForm() {
     <form
       onSubmit={handleSubmit}
       className="flex flex-col gap-4 max-w-md"
+      aria-describedby={
+        error || success ? "form-feedback" : undefined
+      }
     >
-      {error && (
-        <p className="text-red-500 text-sm">{error}</p>
+      {/* FEEDBACK REGION (ACCESSIBLE ANNOUNCEMENT AREA) */}
+      {(error || success) && (
+        <div
+          id="form-feedback"
+          role="status"
+          aria-live="polite"
+          className="text-sm"
+        >
+          {error && (
+            <p className="text-red-600 border border-red-200 bg-red-50 p-2 rounded">
+              {error}
+            </p>
+          )}
+
+          {success && (
+            <p className="text-green-700 border border-green-200 bg-green-50 p-2 rounded">
+              {success}
+            </p>
+          )}
+        </div>
       )}
 
-      {success && (
-        <p className="text-green-600 text-sm">{success}</p>
-      )}
-
+      {/* FIRST NAME */}
+      <label htmlFor="firstName" className="text-sm font-medium">
+        First Name
+      </label>
       <input
+        id="firstName"
         type="text"
         value={firstName}
         onChange={(e) => setFirstName(e.target.value)}
-        placeholder="First Name"
         className="border p-2"
         disabled={loading}
+        autoComplete="given-name"
       />
 
+      {/* LAST NAME */}
+      <label htmlFor="lastName" className="text-sm font-medium">
+        Last Name
+      </label>
       <input
+        id="lastName"
         type="text"
         value={lastName}
         onChange={(e) => setLastName(e.target.value)}
-        placeholder="Last Name"
         className="border p-2"
         disabled={loading}
+        autoComplete="family-name"
       />
 
+      {/* BIRTHDAY */}
+      <label htmlFor="birthday" className="text-sm font-medium">
+        Birthday
+      </label>
       <input
+        id="birthday"
         type="date"
         value={birthday}
         onChange={(e) => setBirthday(e.target.value)}
         className="border p-2"
         disabled={loading}
+        autoComplete="bday"
       />
 
+      {/* EMAIL */}
+      <label htmlFor="email" className="text-sm font-medium">
+        Email
+      </label>
       <input
-        type="text"
+        id="email"
+        type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
         className="border p-2"
         disabled={loading}
+        autoComplete="email"
       />
 
+      {/* USERNAME */}
+      <label htmlFor="username" className="text-sm font-medium">
+        Username
+      </label>
       <input
+        id="username"
         type="text"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
         className="border p-2"
         disabled={loading}
+        autoComplete="username"
       />
 
+      {/* PASSWORD */}
+      <label htmlFor="password" className="text-sm font-medium">
+        Password
+      </label>
       <input
+        id="password"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
         className="border p-2"
         disabled={loading}
+        autoComplete="new-password"
       />
 
+      {/* SUBMIT */}
       <button
         type="submit"
         disabled={loading}
         className="bg-black text-white p-2 disabled:opacity-50"
+        aria-busy={loading}
       >
         {loading ? "Creating account..." : "Create Account"}
       </button>

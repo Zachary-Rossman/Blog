@@ -22,13 +22,19 @@ export default function PostList({
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
 
+  // =========================
+  // FILTER LOGIC (SAFE)
+  // =========================
   const filteredPosts = useMemo(() => {
     if (!posts) return [];
 
     return posts.filter((post) => {
+      const title = post.title ?? "";
+      const body = post.body ?? "";
+
       const matchesSearch =
-        post.title.toLowerCase().includes(search.toLowerCase()) ||
-        post.body.toLowerCase().includes(search.toLowerCase());
+        title.toLowerCase().includes(search.toLowerCase()) ||
+        body.toLowerCase().includes(search.toLowerCase());
 
       const matchesCategory =
         category === "" || post.category === category;
@@ -37,68 +43,114 @@ export default function PostList({
     });
   }, [posts, search, category]);
 
+  // =========================
+  // LOADING STATE
+  // =========================
   if (loading) {
     return (
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <PostCard key={i} loading />
-        ))}
-      </div>
+      <section aria-busy="true" aria-live="polite">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <PostCard key={i} loading />
+          ))}
+        </div>
+      </section>
     );
   }
 
-  return (
-    <div className="space-y-6">
+  // =========================
+  // EMPTY DATABASE STATE
+  // =========================
+  if (!posts || posts.length === 0) {
+    return (
+      <section className="border rounded-lg p-10 text-center">
+        <h2 className="text-lg font-semibold">No posts yet</h2>
+        <p className="text-gray-500 mt-2">
+          Be the first to create a post in the community.
+        </p>
+      </section>
+    );
+  }
 
-      {/* Search + Filter */}
+  const noResults = filteredPosts.length === 0;
+
+  return (
+    <section className="space-y-6" aria-label="Post list">
+
+      {/* =========================
+          SEARCH + FILTER CONTROLS
+      ========================= */}
       <div className="flex flex-col md:flex-row gap-4">
 
-        <input
-          type="text"
-          placeholder="Search posts..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border rounded p-2 flex-1"
-        />
+        {/* SEARCH */}
+        <div className="flex flex-col gap-1 flex-1">
+          <label htmlFor="search" className="text-sm font-medium">
+            Search posts
+          </label>
 
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="border rounded p-2 md:w-64"
-        >
-          <option value="">All Categories</option>
-          <option value="Technology">Technology</option>
-          <option value="Programming">Programming</option>
-          <option value="Career">Career</option>
-          <option value="Gaming">Gaming</option>
-          <option value="Design">Design</option>
-          <option value="Business">Business</option>
-          <option value="Tutorial">Tutorial</option>
-        </select>
+          <input
+            id="search"
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border rounded p-2"
+            placeholder="Search by title or content..."
+          />
+        </div>
 
+        {/* CATEGORY */}
+        <div className="flex flex-col gap-1 md:w-64">
+          <label htmlFor="category" className="text-sm font-medium">
+            Category
+          </label>
+
+          <select
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="border rounded p-2"
+          >
+            <option value="">All Categories</option>
+            <option value="Technology">Technology</option>
+            <option value="Programming">Programming</option>
+            <option value="Career">Career</option>
+            <option value="Gaming">Gaming</option>
+            <option value="Design">Design</option>
+            <option value="Business">Business</option>
+            <option value="Tutorial">Tutorial</option>
+          </select>
+        </div>
       </div>
 
-      {/* Results Count */}
-      <p className="text-sm text-gray-500">
+      {/* =========================
+          RESULTS COUNT
+      ========================= */}
+      <p className="text-sm text-gray-500" aria-live="polite">
         {filteredPosts.length} post
         {filteredPosts.length !== 1 ? "s" : ""} found
       </p>
 
-      {/* Posts */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredPosts.length > 0 ? (
+      {/* =========================
+          POSTS GRID
+      ========================= */}
+      <div
+        className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+        aria-live="polite"
+      >
+        {noResults ? (
+          <div className="col-span-full border rounded-lg p-10 text-center">
+            <h2 className="text-lg font-semibold">No posts found</h2>
+            <p className="text-gray-500 mt-2">
+              Try adjusting your search or category filter.
+            </p>
+          </div>
+        ) : (
           filteredPosts.map((post) => (
             <PostCard key={post._id} post={post} />
           ))
-        ) : (
-          <div className="border rounded-lg p-8 text-center">
-            <p className="text-gray-500">
-              No posts match your search.
-            </p>
-          </div>
         )}
       </div>
 
-    </div>
+    </section>
   );
 }
