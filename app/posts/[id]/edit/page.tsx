@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import EditPostForm from "@/components/posts/EditPostForm";
 
 type Post = {
@@ -14,6 +14,7 @@ type Post = {
 
 export default function EditPostPage() {
   const params = useParams();
+  const router = useRouter();
 
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,35 +38,75 @@ export default function EditPostPage() {
     loadPost();
   }, [params.id]);
 
+  // ⏳ LOADING STATE
   if (loading) {
     return (
-      <div className="p-6">
-        <p className="text-gray-500">Loading post...</p>
-      </div>
+      <main
+        className="max-w-2xl mx-auto px-6 py-12"
+        aria-busy="true"
+        aria-live="polite"
+      >
+        <p className="text-gray-500">Loading editor...</p>
+      </main>
     );
   }
 
+  // ❌ NOT FOUND STATE
   if (!post) {
     return (
-      <div className="p-6">
-        <p className="text-gray-500">Post not found</p>
-      </div>
+      <main className="max-w-2xl mx-auto px-6 py-12 text-center space-y-4">
+        <h1 className="text-2xl font-bold">Post not found</h1>
+
+        <p className="text-gray-500">
+          The post you’re trying to edit doesn’t exist or was removed.
+        </p>
+
+        <button
+          onClick={() => router.push("/posts")}
+          className="rounded-lg bg-black px-5 py-2 text-white"
+        >
+          Back to Posts
+        </button>
+      </main>
     );
   }
 
   return (
-    <div className="p-6 max-w-md">
-      <h1 className="text-2xl font-bold mb-4">
-        Edit Post
-      </h1>
+    <main
+      className="min-h-[calc(100vh-4rem)] bg-gray-50 px-6 py-12"
+      aria-labelledby="edit-post-title"
+    >
+      <div className="max-w-2xl mx-auto space-y-8">
 
-      <EditPostForm
-        id={post._id}
-        initialTitle={post.title}
-        initialBody={post.body}
-        initialImageUrl={post.imageUrl}
-        initialCategory={post.category}
-      />
-    </div>
+        {/* HEADER */}
+        <header className="space-y-2 text-center">
+          <h1
+            id="edit-post-title"
+            className="text-4xl font-bold tracking-tight text-gray-900"
+          >
+            Edit Post
+          </h1>
+
+          <p className="text-gray-600">
+            Update your content, improve clarity, or fix details.
+          </p>
+        </header>
+
+        {/* FORM CARD */}
+        <section
+          className="bg-white border rounded-2xl shadow-sm p-6"
+          aria-label="Edit post form"
+        >
+          <EditPostForm
+            id={post._id}
+            initialTitle={post.title}
+            initialBody={post.body}
+            initialImageUrl={post.imageUrl}
+            initialCategory={post.category}
+          />
+        </section>
+
+      </div>
+    </main>
   );
 }

@@ -19,6 +19,7 @@ export default function DashboardPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loadingPosts, setLoadingPosts] = useState(true);
 
+  // 🔐 AUTH GUARD
   useEffect(() => {
     if (loading) return;
 
@@ -27,6 +28,7 @@ export default function DashboardPage() {
     }
   }, [user, loading, router]);
 
+  // 📦 FETCH USER POSTS
   useEffect(() => {
     async function fetchPosts() {
       try {
@@ -43,12 +45,17 @@ export default function DashboardPage() {
       }
     }
 
-    if (user) {
-      fetchPosts();
-    }
+    if (user) fetchPosts();
   }, [user]);
 
+  // 🗑 DELETE POST
   async function handleDelete(id: string) {
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this post?"
+    );
+
+    if (!confirmDelete) return;
+
     await fetch(`/api/posts/${id}`, {
       method: "DELETE",
     });
@@ -56,93 +63,92 @@ export default function DashboardPage() {
     setPosts((prev) => prev.filter((p) => p._id !== id));
   }
 
+  // ⏳ LOADING STATE
   if (loading || loadingPosts) {
     return (
-      <div className="max-w-6xl mx-auto px-6 py-12">
+      <main
+        className="max-w-6xl mx-auto px-6 py-12"
+        aria-busy="true"
+        aria-live="polite"
+      >
         <p className="text-gray-500">Loading dashboard...</p>
-      </div>
+      </main>
     );
   }
 
   if (!user) return null;
 
   return (
-    <main className="max-w-6xl mx-auto px-6 py-12 space-y-10">
+    <main
+      className="max-w-6xl mx-auto px-6 py-12 space-y-10"
+      aria-labelledby="dashboard-title"
+    >
 
       {/* HEADER */}
-      <section>
-        <h1 className="text-4xl font-bold">
+      <section className="space-y-2">
+        <h1
+          id="dashboard-title"
+          className="text-4xl font-bold tracking-tight"
+        >
           Dashboard
         </h1>
 
-        <p className="mt-2 text-gray-500">
-          Welcome back, {user.username}.
-          Manage your posts and account from one place.
+        <p className="text-gray-500">
+          Welcome back,{" "}
+          <span className="font-medium text-gray-700">
+            {user.username}
+          </span>
+          . Manage your posts and account from one place.
         </p>
       </section>
 
       {/* PROFILE CARD */}
-      <section className="rounded-2xl border bg-white p-6 shadow-sm">
-
+      <section
+        className="rounded-2xl border bg-white p-6 shadow-sm"
+        aria-label="User profile summary"
+      >
         <div className="grid gap-6 md:grid-cols-3">
 
           <div>
-            <p className="text-sm text-gray-500">
-              Username
-            </p>
-
-            <p className="mt-1 font-semibold">
-              {user.username}
-            </p>
+            <p className="text-sm text-gray-500">Username</p>
+            <p className="mt-1 font-semibold">{user.username}</p>
           </div>
 
           <div>
-            <p className="text-sm text-gray-500">
-              Email
-            </p>
-
-            <p className="mt-1 font-semibold">
-              {user.email}
-            </p>
+            <p className="text-sm text-gray-500">Email</p>
+            <p className="mt-1 font-semibold">{user.email}</p>
           </div>
 
           <div>
-            <p className="text-sm text-gray-500">
-              Posts Written
-            </p>
-
+            <p className="text-sm text-gray-500">Posts Written</p>
             <p className="mt-1 text-3xl font-bold text-blue-600">
               {posts.length}
             </p>
           </div>
 
         </div>
-
       </section>
 
       {/* ACTION BAR */}
       <section className="flex justify-between items-center">
-
-        <h2 className="text-2xl font-bold">
-          My Posts
-        </h2>
+        <h2 className="text-2xl font-bold">My Posts</h2>
 
         <button
           onClick={() => router.push("/posts/new")}
-          className="rounded-lg bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-700"
+          className="rounded-lg bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          aria-label="Create a new post"
         >
           Create Post
         </button>
-
       </section>
 
       {/* EMPTY STATE */}
       {posts.length === 0 ? (
-        <div className="rounded-2xl border bg-white p-12 text-center shadow-sm">
-
-          <h3 className="text-xl font-semibold">
-            No posts yet
-          </h3>
+        <section
+          className="rounded-2xl border bg-white p-12 text-center shadow-sm"
+          aria-label="No posts state"
+        >
+          <h3 className="text-xl font-semibold">No posts yet</h3>
 
           <p className="mt-3 text-gray-500">
             Your published posts will appear here.
@@ -150,17 +156,18 @@ export default function DashboardPage() {
 
           <button
             onClick={() => router.push("/posts/new")}
-            className="mt-6 rounded-lg bg-blue-600 px-5 py-3 text-white transition hover:bg-blue-700"
+            className="mt-6 rounded-lg bg-blue-600 px-5 py-3 text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             Create Your First Post
           </button>
-
-        </div>
+        </section>
       ) : (
-        <div className="space-y-4">
-
+        <section
+          className="space-y-4"
+          aria-label="User posts list"
+        >
           {posts.map((post) => (
-            <div
+            <article
               key={post._id}
               className="rounded-2xl border bg-white p-6 shadow-sm transition hover:shadow-md"
             >
@@ -182,14 +189,16 @@ export default function DashboardPage() {
                     onClick={() =>
                       router.push(`/posts/${post._id}/edit`)
                     }
-                    className="rounded-lg border px-4 py-2 transition hover:bg-gray-100"
+                    className="rounded-lg border px-4 py-2 transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                    aria-label={`Edit post titled ${post.title}`}
                   >
                     Edit
                   </button>
 
                   <button
                     onClick={() => handleDelete(post._id)}
-                    className="rounded-lg bg-red-600 px-4 py-2 text-white transition hover:bg-red-700"
+                    className="rounded-lg bg-red-600 px-4 py-2 text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400"
+                    aria-label={`Delete post titled ${post.title}`}
                   >
                     Delete
                   </button>
@@ -197,10 +206,9 @@ export default function DashboardPage() {
                 </div>
 
               </div>
-            </div>
+            </article>
           ))}
-
-        </div>
+        </section>
       )}
 
     </main>

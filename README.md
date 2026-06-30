@@ -245,9 +245,9 @@ project-root/
 
 * [x] Homepage redesign
 * [x] Dashboard redesign
-* [ ] Featured content sections
-* [ ] Improved post cards
-* [ ] Improved post detail pages
+* [x] Featured content sections
+* [x] Improved post cards
+* [x] Improved post detail pages
 
 ### Phase 9: Social Features
 

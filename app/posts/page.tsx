@@ -8,9 +8,7 @@ export default async function PostsPage() {
 
   const token = cookieStore.get("auth_token")?.value;
 
-  const isLoggedIn = !!(
-    token && verifyToken(token)
-  );
+  const isLoggedIn = !!(token && verifyToken(token));
 
   const res = await fetch("http://localhost:3000/api/posts", {
     cache: "no-store",
@@ -19,29 +17,45 @@ export default async function PostsPage() {
   const posts = await res.json();
 
   return (
-    <main className="max-w-5xl mx-auto px-6 py-10">
+    <main className="min-h-screen bg-gray-50">
+      
+      <div className="max-w-5xl mx-auto px-6 py-12 space-y-10">
 
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold">Posts</h1>
-          <p className="text-gray-500">
-            Browse the latest posts from the community
-          </p>
-        </div>
+        {/* HEADER */}
+        <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
 
-        {isLoggedIn && (
-          <Link
-            href="/posts/new"
-            className="bg-black text-white px-4 py-2 rounded-2"
-          >
-            + New Post
-          </Link>
-        )}
+          {/* TITLE BLOCK */}
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+              Community Posts
+            </h1>
+
+            <p className="text-gray-600">
+              Discover tutorials, insights, and ideas from developers around the world.
+            </p>
+          </div>
+
+          {/* CTA */}
+          {isLoggedIn && (
+            <Link
+              href="/posts/new"
+              className="inline-flex items-center justify-center rounded-lg bg-black px-5 py-3 text-white font-medium transition hover:bg-gray-800"
+            >
+              + New Post
+            </Link>
+          )}
+        </header>
+
+        {/* FEED CONTAINER */}
+        <section
+          className="bg-white border rounded-2xl shadow-sm p-6"
+          aria-label="Posts feed"
+        >
+          <PostList posts={posts} />
+        </section>
+
       </div>
 
-      {/* Feed */}
-      <PostList posts={posts} />
     </main>
   );
 }
