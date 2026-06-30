@@ -243,8 +243,8 @@ project-root/
 
 ### Phase 8: UI & Dashboard Polish
 
-* [ ] Homepage redesign
-* [ ] Dashboard redesign
+* [x] Homepage redesign
+* [x] Dashboard redesign
 * [ ] Featured content sections
 * [ ] Improved post cards
 * [ ] Improved post detail pages
