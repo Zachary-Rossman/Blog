@@ -22,9 +22,7 @@ export default function LoginForm() {
 
     setError(null);
 
-    // =========================
     // VALIDATION
-    // =========================
     if (!email.trim()) {
       setError("Email is required");
       return;
@@ -71,57 +69,65 @@ export default function LoginForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 max-w-md"
+      className="space-y-5 max-w-md"
       aria-describedby={error ? "login-error" : undefined}
     >
-      {/* ERROR MESSAGE (ACCESSIBLE) */}
+      {/* ERROR */}
       {error && (
         <div
           id="login-error"
           role="alert"
           aria-live="polite"
-          className="text-red-600 text-sm border border-red-200 bg-red-50 p-2 rounded"
+          className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600"
         >
           {error}
         </div>
       )}
 
-      {/* EMAIL */}
-      <label htmlFor="email" className="text-sm font-medium">
-        Email
-      </label>
-      <input
-        id="email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Enter your email"
-        className="border p-2"
-        disabled={loading}
-        autoComplete="email"
-      />
+      {/* EMAIL FIELD */}
+      <div className="space-y-1">
+        <label htmlFor="email" className="text-sm font-medium">
+          Email
+        </label>
 
-      {/* PASSWORD */}
-      <label htmlFor="password" className="text-sm font-medium">
-        Password
-      </label>
-      <input
-        id="password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Enter your password"
-        className="border p-2"
-        disabled={loading}
-        autoComplete="current-password"
-      />
+        <input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          className="w-full rounded-md border px-3 py-2"
+          disabled={loading}
+          autoComplete="email"
+          aria-invalid={!!error}
+        />
+      </div>
 
-      {/* BUTTON */}
+      {/* PASSWORD FIELD */}
+      <div className="space-y-1">
+        <label htmlFor="password" className="text-sm font-medium">
+          Password
+        </label>
+
+        <input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
+          className="w-full rounded-md border px-3 py-2"
+          disabled={loading}
+          autoComplete="current-password"
+          aria-invalid={!!error}
+        />
+      </div>
+
+      {/* SUBMIT BUTTON */}
       <button
         type="submit"
         disabled={loading}
-        className="bg-black text-white p-2 disabled:opacity-50"
         aria-busy={loading}
+        className="w-full rounded-md bg-black px-4 py-2 text-white disabled:opacity-50"
       >
         {loading ? "Logging in..." : "Login"}
       </button>

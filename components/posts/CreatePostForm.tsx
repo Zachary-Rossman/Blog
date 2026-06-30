@@ -22,9 +22,7 @@ export default function CreatePostForm() {
 
     setError("");
 
-    // =========================
     // VALIDATION
-    // =========================
     if (!title.trim()) {
       setError("Title is required");
       return;
@@ -77,26 +75,22 @@ export default function CreatePostForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 max-w-md"
+      className="space-y-5 max-w-md"
       aria-describedby={error ? "form-error" : undefined}
     >
-      {/* =========================
-          ERROR STATE (ACCESSIBLE)
-      ========================= */}
+      {/* ERROR STATE */}
       {error && (
         <div
           id="form-error"
-          className="border border-red-300 bg-red-50 text-red-700 p-3 rounded"
           role="alert"
+          className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-red-700"
         >
           {error}
         </div>
       )}
 
-      {/* =========================
-          TITLE
-      ========================= */}
-      <div className="flex flex-col gap-1">
+      {/* TITLE */}
+      <div className="space-y-1">
         <label htmlFor="title" className="text-sm font-medium">
           Title
         </label>
@@ -105,16 +99,14 @@ export default function CreatePostForm() {
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="border p-2 rounded"
+          className="w-full rounded-md border px-3 py-2"
           disabled={loading}
           aria-invalid={!!error}
         />
       </div>
 
-      {/* =========================
-          CATEGORY
-      ========================= */}
-      <div className="flex flex-col gap-1">
+      {/* CATEGORY */}
+      <div className="space-y-1">
         <label htmlFor="category" className="text-sm font-medium">
           Category
         </label>
@@ -123,7 +115,7 @@ export default function CreatePostForm() {
           id="category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="border p-2 rounded w-full"
+          className="w-full rounded-md border px-3 py-2"
           disabled={loading}
           aria-invalid={!!error}
         >
@@ -138,10 +130,8 @@ export default function CreatePostForm() {
         </select>
       </div>
 
-      {/* =========================
-          IMAGE URL
-      ========================= */}
-      <div className="flex flex-col gap-1">
+      {/* IMAGE URL */}
+      <div className="space-y-1">
         <label htmlFor="imageUrl" className="text-sm font-medium">
           Image URL (optional)
         </label>
@@ -150,15 +140,13 @@ export default function CreatePostForm() {
           id="imageUrl"
           value={imageUrl}
           onChange={(e) => setImageUrl(e.target.value)}
-          className="border p-2 rounded"
+          className="w-full rounded-md border px-3 py-2"
           disabled={loading}
         />
       </div>
 
-      {/* =========================
-          BODY
-      ========================= */}
-      <div className="flex flex-col gap-1">
+      {/* BODY */}
+      <div className="space-y-1">
         <label htmlFor="body" className="text-sm font-medium">
           Body
         </label>
@@ -168,19 +156,17 @@ export default function CreatePostForm() {
           value={body}
           onChange={(e) => setBody(e.target.value)}
           rows={10}
-          className="border p-2 rounded"
+          className="w-full rounded-md border px-3 py-2"
           disabled={loading}
           aria-invalid={!!error}
         />
       </div>
 
-      {/* =========================
-          SUBMIT
-      ========================= */}
+      {/* SUBMIT */}
       <button
         type="submit"
         disabled={loading}
-        className="bg-black text-white p-2 rounded disabled:opacity-50"
+        className="rounded-md bg-black px-4 py-2 text-white disabled:opacity-50"
       >
         {loading ? "Creating..." : "Create Post"}
       </button>

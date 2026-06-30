@@ -35,9 +35,7 @@ export default function EditPostForm({
 
     setError("");
 
-    // =========================
     // VALIDATION
-    // =========================
     if (!title.trim()) {
       setError("Title is required");
       return;
@@ -86,36 +84,38 @@ export default function EditPostForm({
   }
 
   return (
-    <form onSubmit={handleUpdate} className="space-y-4">
-      {/* ERROR MESSAGE */}
+    <form onSubmit={handleUpdate} className="space-y-5">
+
+      {/* ERROR */}
       {error && (
         <div
           id="form-error"
-          className="border border-red-300 bg-red-50 text-red-700 p-3 rounded"
+          className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-red-700 text-sm"
+          role="alert"
         >
           {error}
         </div>
       )}
 
       {/* TITLE */}
-      <div className="flex flex-col gap-1">
+      <div className="space-y-1">
         <label htmlFor="title" className="text-sm font-medium">
           Title
         </label>
 
         <input
           id="title"
-          className="border p-2 w-full rounded"
+          className="w-full rounded-md border px-3 py-2"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           disabled={saving}
-          aria-describedby={error ? "form-error" : undefined}
           aria-invalid={!!error}
+          aria-describedby={error ? "form-error" : undefined}
         />
       </div>
 
       {/* CATEGORY */}
-      <div className="flex flex-col gap-1">
+      <div className="space-y-1">
         <label htmlFor="category" className="text-sm font-medium">
           Category
         </label>
@@ -124,10 +124,10 @@ export default function EditPostForm({
           id="category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="border p-2 rounded w-full"
+          className="w-full rounded-md border px-3 py-2"
           disabled={saving}
-          aria-describedby={error ? "form-error" : undefined}
           aria-invalid={!!error}
+          aria-describedby={error ? "form-error" : undefined}
         >
           <option value="">Select Category</option>
           <option value="Technology">Technology</option>
@@ -141,7 +141,7 @@ export default function EditPostForm({
       </div>
 
       {/* IMAGE */}
-      <div className="flex flex-col gap-1">
+      <div className="space-y-1">
         <label htmlFor="imageUrl" className="text-sm font-medium">
           Image URL
         </label>
@@ -150,13 +150,13 @@ export default function EditPostForm({
           id="imageUrl"
           value={imageUrl}
           onChange={(e) => setImageUrl(e.target.value)}
-          className="border p-2 rounded w-full"
+          className="w-full rounded-md border px-3 py-2"
           disabled={saving}
         />
       </div>
 
       {/* BODY */}
-      <div className="flex flex-col gap-1">
+      <div className="space-y-1">
         <label htmlFor="body" className="text-sm font-medium">
           Body
         </label>
@@ -166,10 +166,10 @@ export default function EditPostForm({
           value={body}
           onChange={(e) => setBody(e.target.value)}
           rows={10}
-          className="border p-2 w-full rounded"
+          className="w-full rounded-md border px-3 py-2"
           disabled={saving}
-          aria-describedby={error ? "form-error" : undefined}
           aria-invalid={!!error}
+          aria-describedby={error ? "form-error" : undefined}
         />
       </div>
 
@@ -177,7 +177,7 @@ export default function EditPostForm({
       <button
         type="submit"
         disabled={saving}
-        className="bg-black text-white px-4 py-2 rounded disabled:opacity-50"
+        className="rounded-md bg-black px-4 py-2 text-white disabled:opacity-50"
       >
         {saving ? "Saving..." : "Save Changes"}
       </button>

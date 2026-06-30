@@ -26,9 +26,7 @@ export default function CreateUserForm() {
     setError(null);
     setSuccess(null);
 
-    // =========================
     // CLIENT VALIDATION
-    // =========================
     if (!firstName.trim()) return setError("First name is required");
     if (!lastName.trim()) return setError("Last name is required");
     if (!birthday) return setError("Birthday is required");
@@ -68,7 +66,6 @@ export default function CreateUserForm() {
       setTimeout(() => {
         router.push("/login");
       }, 1200);
-
     } catch (err) {
       console.error(err);
       setError("Network error. Please try again.");
@@ -80,27 +77,25 @@ export default function CreateUserForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 max-w-md"
-      aria-describedby={
-        error || success ? "form-feedback" : undefined
-      }
+      className="space-y-5 max-w-md"
+      aria-describedby={error || success ? "form-feedback" : undefined}
     >
-      {/* FEEDBACK REGION (ACCESSIBLE ANNOUNCEMENT AREA) */}
+      {/* FEEDBACK */}
       {(error || success) && (
         <div
           id="form-feedback"
-          role="status"
+          role={error ? "alert" : "status"}
           aria-live="polite"
-          className="text-sm"
+          className="space-y-2"
         >
           {error && (
-            <p className="text-red-600 border border-red-200 bg-red-50 p-2 rounded">
+            <p className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
               {error}
             </p>
           )}
 
           {success && (
-            <p className="text-green-700 border border-green-200 bg-green-50 p-2 rounded">
+            <p className="rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
               {success}
             </p>
           )}
@@ -108,95 +103,107 @@ export default function CreateUserForm() {
       )}
 
       {/* FIRST NAME */}
-      <label htmlFor="firstName" className="text-sm font-medium">
-        First Name
-      </label>
-      <input
-        id="firstName"
-        type="text"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-        className="border p-2"
-        disabled={loading}
-        autoComplete="given-name"
-      />
+      <div className="space-y-1">
+        <label htmlFor="firstName" className="text-sm font-medium">
+          First Name
+        </label>
+        <input
+          id="firstName"
+          type="text"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          className="w-full rounded-md border px-3 py-2"
+          disabled={loading}
+          autoComplete="given-name"
+        />
+      </div>
 
       {/* LAST NAME */}
-      <label htmlFor="lastName" className="text-sm font-medium">
-        Last Name
-      </label>
-      <input
-        id="lastName"
-        type="text"
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
-        className="border p-2"
-        disabled={loading}
-        autoComplete="family-name"
-      />
+      <div className="space-y-1">
+        <label htmlFor="lastName" className="text-sm font-medium">
+          Last Name
+        </label>
+        <input
+          id="lastName"
+          type="text"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          className="w-full rounded-md border px-3 py-2"
+          disabled={loading}
+          autoComplete="family-name"
+        />
+      </div>
 
       {/* BIRTHDAY */}
-      <label htmlFor="birthday" className="text-sm font-medium">
-        Birthday
-      </label>
-      <input
-        id="birthday"
-        type="date"
-        value={birthday}
-        onChange={(e) => setBirthday(e.target.value)}
-        className="border p-2"
-        disabled={loading}
-        autoComplete="bday"
-      />
+      <div className="space-y-1">
+        <label htmlFor="birthday" className="text-sm font-medium">
+          Birthday
+        </label>
+        <input
+          id="birthday"
+          type="date"
+          value={birthday}
+          onChange={(e) => setBirthday(e.target.value)}
+          className="w-full rounded-md border px-3 py-2"
+          disabled={loading}
+          autoComplete="bday"
+        />
+      </div>
 
       {/* EMAIL */}
-      <label htmlFor="email" className="text-sm font-medium">
-        Email
-      </label>
-      <input
-        id="email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="border p-2"
-        disabled={loading}
-        autoComplete="email"
-      />
+      <div className="space-y-1">
+        <label htmlFor="email" className="text-sm font-medium">
+          Email
+        </label>
+        <input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full rounded-md border px-3 py-2"
+          disabled={loading}
+          autoComplete="email"
+        />
+      </div>
 
       {/* USERNAME */}
-      <label htmlFor="username" className="text-sm font-medium">
-        Username
-      </label>
-      <input
-        id="username"
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="border p-2"
-        disabled={loading}
-        autoComplete="username"
-      />
+      <div className="space-y-1">
+        <label htmlFor="username" className="text-sm font-medium">
+          Username
+        </label>
+        <input
+          id="username"
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="w-full rounded-md border px-3 py-2"
+          disabled={loading}
+          autoComplete="username"
+        />
+      </div>
 
       {/* PASSWORD */}
-      <label htmlFor="password" className="text-sm font-medium">
-        Password
-      </label>
-      <input
-        id="password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="border p-2"
-        disabled={loading}
-        autoComplete="new-password"
-      />
+      <div className="space-y-1">
+        <label htmlFor="password" className="text-sm font-medium">
+          Password
+        </label>
+        <input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full rounded-md border px-3 py-2"
+          disabled={loading}
+          autoComplete="new-password"
+        />
+      </div>
 
       {/* SUBMIT */}
       <button
         type="submit"
         disabled={loading}
-        className="bg-black text-white p-2 disabled:opacity-50"
         aria-busy={loading}
+        className="w-full rounded-md bg-black px-4 py-2 text-white disabled:opacity-50"
       >
         {loading ? "Creating account..." : "Create Account"}
       </button>

@@ -21,11 +21,17 @@ export default function PostCard({
   if (loading) {
     return (
       <div
-        className="border rounded-lg p-4 animate-pulse space-y-3"
+        className="overflow-hidden rounded-2xl border bg-white shadow-sm animate-pulse"
         aria-hidden="true"
       >
-        <div className="h-5 bg-gray-200 w-3/4 rounded" />
-        <div className="h-3 bg-gray-200 w-1/2 rounded" />
+        <div className="h-52 bg-gray-200" />
+
+        <div className="space-y-4 p-6">
+          <div className="h-4 w-24 rounded bg-gray-200" />
+          <div className="h-6 w-3/4 rounded bg-gray-200" />
+          <div className="h-4 w-full rounded bg-gray-200" />
+          <div className="h-4 w-5/6 rounded bg-gray-200" />
+        </div>
       </div>
     );
   }
@@ -36,34 +42,67 @@ export default function PostCard({
     <article>
       <Link
         href={`/posts/${post._id}`}
-        className="block border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition focus:outline-none focus:ring-2 focus:ring-black"
         aria-label={`Read post: ${post.title}`}
+        className="
+          block
+          overflow-hidden
+          rounded-2xl
+          border
+          bg-white
+          shadow-sm
+          transition-all
+          duration-300
+          hover:-translate-y-1
+          hover:shadow-xl
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-600
+        "
       >
-
         {/* IMAGE */}
         {post.imageUrl && (
           <img
             src={post.imageUrl}
             alt={post.title}
-            className="w-full h-40 object-cover rounded mb-3"
             loading="lazy"
+            className="h-52 w-full object-cover"
           />
         )}
 
-        {/* TITLE */}
-        <h2 className="text-lg font-semibold mb-2">
-          {post.title}
-        </h2>
+        <div className="space-y-4 p-6">
 
-        {/* META */}
-        <p className="text-sm text-gray-500">
-          Posted by{" "}
-          <span className="font-medium text-gray-700">
-            {post.author}
-          </span>{" "}
-          · {post.category}
-        </p>
+          {/* CATEGORY */}
+          <span className="inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700">
+            {post.category}
+          </span>
 
+          {/* TITLE */}
+          <h2 className="text-2xl font-bold leading-tight text-gray-900">
+            {post.title}
+          </h2>
+
+          {/* BODY PREVIEW */}
+          <p className="line-clamp-3 text-gray-600">
+            {post.body}
+          </p>
+
+          {/* FOOTER */}
+          <div className="flex items-center justify-between pt-2 text-sm text-gray-500">
+
+            <span>
+              By{" "}
+              <span className="font-medium text-gray-700">
+                {post.author}
+              </span>
+            </span>
+
+            <span className="font-medium text-blue-600">
+              Read →
+            </span>
+
+          </div>
+
+        </div>
       </Link>
     </article>
   );

@@ -22,9 +22,6 @@ export default function PostList({
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
 
-  // =========================
-  // FILTER LOGIC (SAFE)
-  // =========================
   const filteredPosts = useMemo(() => {
     if (!posts) return [];
 
@@ -44,12 +41,12 @@ export default function PostList({
   }, [posts, search, category]);
 
   // =========================
-  // LOADING STATE
+  // LOADING
   // =========================
   if (loading) {
     return (
       <section aria-busy="true" aria-live="polite">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <PostCard key={i} loading />
           ))}
@@ -59,14 +56,17 @@ export default function PostList({
   }
 
   // =========================
-  // EMPTY DATABASE STATE
+  // EMPTY DATABASE
   // =========================
   if (!posts || posts.length === 0) {
     return (
-      <section className="border rounded-lg p-10 text-center">
-        <h2 className="text-lg font-semibold">No posts yet</h2>
-        <p className="text-gray-500 mt-2">
-          Be the first to create a post in the community.
+      <section className="rounded-2xl border bg-white p-12 text-center shadow-sm">
+        <h2 className="text-2xl font-bold">
+          No posts yet
+        </h2>
+
+        <p className="mt-3 text-gray-500">
+          Be the first person to publish something.
         </p>
       </section>
     );
@@ -75,78 +75,127 @@ export default function PostList({
   const noResults = filteredPosts.length === 0;
 
   return (
-    <section className="space-y-6" aria-label="Post list">
+    <section
+      className="space-y-8"
+      aria-label="Post list"
+    >
 
-      {/* =========================
-          SEARCH + FILTER CONTROLS
-      ========================= */}
-      <div className="flex flex-col md:flex-row gap-4">
+      {/* SEARCH CARD */}
+      <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
-        {/* SEARCH */}
-        <div className="flex flex-col gap-1 flex-1">
-          <label htmlFor="search" className="text-sm font-medium">
-            Search posts
-          </label>
+        <div className="grid gap-6 md:grid-cols-[1fr_250px]">
 
-          <input
-            id="search"
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border rounded p-2"
-            placeholder="Search by title or content..."
-          />
+          {/* SEARCH */}
+          <div>
+            <label
+              htmlFor="search"
+              className="mb-2 block text-sm font-semibold text-gray-700"
+            >
+              Search Posts
+            </label>
+
+            <input
+              id="search"
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by title or content..."
+              className="
+                w-full
+                rounded-xl
+                border
+                px-4
+                py-3
+                outline-none
+                transition
+                focus:border-blue-500
+                focus:ring-2
+                focus:ring-blue-500
+              "
+            />
+          </div>
+
+          {/* CATEGORY */}
+          <div>
+            <label
+              htmlFor="category"
+              className="mb-2 block text-sm font-semibold text-gray-700"
+            >
+              Category
+            </label>
+
+            <select
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="
+                w-full
+                rounded-xl
+                border
+                px-4
+                py-3
+                outline-none
+                transition
+                focus:border-blue-500
+                focus:ring-2
+                focus:ring-blue-500
+              "
+            >
+              <option value="">All Categories</option>
+              <option value="Technology">Technology</option>
+              <option value="Programming">Programming</option>
+              <option value="Career">Career</option>
+              <option value="Gaming">Gaming</option>
+              <option value="Design">Design</option>
+              <option value="Business">Business</option>
+              <option value="Tutorial">Tutorial</option>
+            </select>
+          </div>
+
         </div>
 
-        {/* CATEGORY */}
-        <div className="flex flex-col gap-1 md:w-64">
-          <label htmlFor="category" className="text-sm font-medium">
-            Category
-          </label>
-
-          <select
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="border rounded p-2"
-          >
-            <option value="">All Categories</option>
-            <option value="Technology">Technology</option>
-            <option value="Programming">Programming</option>
-            <option value="Career">Career</option>
-            <option value="Gaming">Gaming</option>
-            <option value="Design">Design</option>
-            <option value="Business">Business</option>
-            <option value="Tutorial">Tutorial</option>
-          </select>
-        </div>
       </div>
 
-      {/* =========================
-          RESULTS COUNT
-      ========================= */}
-      <p className="text-sm text-gray-500" aria-live="polite">
-        {filteredPosts.length} post
-        {filteredPosts.length !== 1 ? "s" : ""} found
-      </p>
+      {/* RESULTS */}
+      <div className="flex items-center justify-between">
 
-      {/* =========================
-          POSTS GRID
-      ========================= */}
+        <h2 className="text-2xl font-bold">
+          Posts
+        </h2>
+
+        <p
+          className="text-sm text-gray-500"
+          aria-live="polite"
+        >
+          {filteredPosts.length} result
+          {filteredPosts.length !== 1 ? "s" : ""}
+        </p>
+
+      </div>
+
+      {/* GRID */}
       <div
-        className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+        className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
         aria-live="polite"
       >
         {noResults ? (
-          <div className="col-span-full border rounded-lg p-10 text-center">
-            <h2 className="text-lg font-semibold">No posts found</h2>
-            <p className="text-gray-500 mt-2">
-              Try adjusting your search or category filter.
+          <div className="col-span-full rounded-2xl border bg-white p-12 text-center shadow-sm">
+
+            <h2 className="text-2xl font-bold">
+              Nothing matched your search
+            </h2>
+
+            <p className="mt-3 text-gray-500">
+              Try another keyword or choose a different category.
             </p>
+
           </div>
         ) : (
           filteredPosts.map((post) => (
-            <PostCard key={post._id} post={post} />
+            <PostCard
+              key={post._id}
+              post={post}
+            />
           ))
         )}
       </div>
