@@ -255,7 +255,7 @@ project-root/
 
 ### Phase 9: Social Features
 
-* [ ] Comments system
+* [x] Comments system
 * [ ] Post reactions
 * [ ] User profiles
 * [ ] Bookmarks
