@@ -93,6 +93,8 @@ project-root/
  
 ├── app/
     ├── api/
+        ├── comments/
+            └── route.ts
         ├── login/
             └── route.ts
         ├── logout/
@@ -134,6 +136,8 @@ project-root/
         ├── AuthProvider.tsx
         ├── CreateUserForm.tsx
         └── LoginForm.tsx
+    ├── comments/
+        └── CommentForm.tsx
     ├── layout/
         └── Hero.tsx
     ├── navigation/

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CommentForm from "@/components/comments/CommentForm";
 
 export default async function PostPage({
   params,
@@ -7,21 +8,27 @@ export default async function PostPage({
 }) {
   const { id } = await params;
 
+  // POSTS
   const res = await fetch("http://localhost:3000/api/posts", {
     cache: "no-store",
   });
 
   const posts = await res.json();
-
   const post = posts.find((p: any) => p._id === id);
+
+  // COMMENTS (NEW)
+  const commentRes = await fetch(
+    `http://localhost:3000/api/comments?postId=${id}`,
+    { cache: "no-store" }
+  );
+
+  const comments = await commentRes.json();
 
   // NOT FOUND
   if (!post) {
     return (
       <main className="max-w-3xl mx-auto px-6 py-20 text-center space-y-4">
-        <h1 className="text-2xl font-bold">
-          Post not found
-        </h1>
+        <h1 className="text-2xl font-bold">Post not found</h1>
 
         <p className="text-gray-500">
           The post you're looking for doesn't exist or may have been removed.
@@ -38,15 +45,11 @@ export default async function PostPage({
   }
 
   return (
-    <main
-      className="min-h-screen bg-gray-50"
-      aria-labelledby="post-title"
-    >
+    <main className="min-h-screen bg-gray-50" aria-labelledby="post-title">
       <article className="max-w-4xl mx-auto px-6 py-14 space-y-10">
 
         {/* HEADER */}
         <header className="space-y-5">
-
           <div className="space-y-2">
             <p className="text-sm font-medium uppercase tracking-wide text-blue-600">
               {post.category}
@@ -67,7 +70,7 @@ export default async function PostPage({
             </p>
           </div>
 
-          {/* FEATURED IMAGE */}
+          {/* IMAGE */}
           {post.imageUrl?.trim() && (
             <img
               src={post.imageUrl}
@@ -75,19 +78,61 @@ export default async function PostPage({
               className="w-full aspect-[16/9] object-contain rounded-2xl border bg-gray-100"
             />
           )}
-
         </header>
 
-        {/* ARTICLE */}
+        {/* BODY */}
         <section
           className="rounded-2xl border bg-white p-8 shadow-sm"
           aria-label="Post content"
         >
-          <div className="prose prose-lg max-w-none prose-headings:font-bold prose-p:text-gray-700">
-            <p className="whitespace-pre-wrap leading-8">
-              {post.body}
-            </p>
+          <p className="whitespace-pre-wrap leading-8 text-gray-700">
+            {post.body}
+          </p>
+        </section>
+
+        {/* =========================
+            COMMENTS SECTION (NEW)
+        ========================= */}
+        <section className="space-y-6 pt-6" aria-label="Comments section">
+
+          <h2 className="text-2xl font-bold text-gray-900">
+            Comments
+          </h2>
+
+          {/* COMMENT FORM */}
+          <CommentForm postId={post._id} userId={post.authorId} />
+
+          {/* COMMENTS LIST */}
+          <div className="space-y-4">
+            {comments.length === 0 ? (
+              <p className="text-gray-500">
+                No comments yet. Be the first to comment.
+              </p>
+            ) : (
+              comments.map((comment: any) => (
+                <div
+                  key={comment._id}
+                  className="rounded-2xl border bg-white p-5 shadow-sm space-y-3"
+                >
+                  {/* OPTIONAL IMAGE */}
+                  {comment.imageUrl && (
+                    <img
+                      src={comment.imageUrl}
+                      alt="Comment attachment"
+                      className="w-full aspect-[16/9] object-contain rounded-lg border bg-gray-100"
+                    />
+                  )}
+
+                  <p className="text-gray-800">{comment.content}</p>
+
+                  <p className="text-xs text-gray-500">
+                    User: {comment.user?.username || "Unknown user"}
+                  </p>
+                </div>
+              ))
+            )}
           </div>
+
         </section>
 
       </article>
