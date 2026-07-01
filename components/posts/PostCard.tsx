@@ -60,12 +60,12 @@ export default function PostCard({
         "
       >
         {/* IMAGE */}
-        {post.imageUrl && (
+        {post.imageUrl?.trim() && (
           <img
             src={post.imageUrl}
             alt={post.title}
             loading="lazy"
-            className="h-52 w-full object-cover"
+            className="w-full aspect=[16/9] object-cover"
           />
         )}
 
