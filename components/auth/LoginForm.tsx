@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { LoginInput } from "@/types/user";
+import type { LoginInput } from "@/types/User";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 export default function LoginForm() {

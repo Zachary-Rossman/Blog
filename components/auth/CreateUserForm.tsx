@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { CreateUserInput } from "@/types/user";
+import type { CreateUserInput } from "@/types/User";
 
 export default function CreateUserForm() {
   const router = useRouter();

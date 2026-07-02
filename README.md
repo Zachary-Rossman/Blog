@@ -107,6 +107,8 @@ project-root/
             ├── mine/
                 └── route.ts
             └── route.ts
+        ├── reactions/
+            └── route.ts
         ├── users/
             └── route.ts
     ├── dashboard/
@@ -146,7 +148,8 @@ project-root/
         ├── CreatePostForm.tsx
         ├── EditPostForm.tsx
         ├── PostCard.tsx
-        └── PostList.tsx
+        ├── PostList.tsx
+        └── PostReactionButton.tsx
     └── ui/
         └── Toast.tsx
 
@@ -160,13 +163,16 @@ project-root/
 
 ├── models
     ├── Post.ts
-    └── User.ts
+    ├── User.ts
+    └── Reaction.ts
  
 ├── public/
 
 ├── types/
-    ├── post.ts
-    └── user.ts
+    ├── Comment.ts
+    ├── Post.ts
+    ├── Reaction.ts
+    └── User.ts
  
 ├── node_modules/
  
@@ -256,7 +262,7 @@ project-root/
 ### Phase 9: Social Features
 
 * [x] Comments system
-* [ ] Post reactions
+* [/] Post reactions
 * [ ] User profiles
 * [ ] Bookmarks
 * [ ] Draft posts
