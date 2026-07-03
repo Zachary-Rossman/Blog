@@ -3,17 +3,28 @@ import { connectDB } from "@/lib/mongodb";
 import Reaction from "@/models/Reaction";
 
 // ======================================================
-// CREATE REACTION
+// TOGGLE REACTION (POST)
 // ======================================================
-// Creates a single reaction for a user on a post.
-//
-// Because the Reaction model has a unique index on
-// (postId + userId), the same user cannot like the
-// same post more than once.
-//
-// In the future, this route will probably become a
-// "toggle" endpoint (like/unlike), but for now it
-// simply creates a reaction.
+// This enDpoint toggles a user's reaction on a post.
+// Workflow:
+// 
+// 1. Receive postId, userId, and reaction type.
+// 2. Check whether the reaction already exists.
+// 3. If it exists:
+//      - Delete it (unlike)
+//      - liked = false
+// 4. If it does not exist:
+//      - Create it (like)
+//      - liked = true
+// 5. Count total reactions for that post.
+// 6. Return:
+
+// {
+//    liked: boolean,
+//    count: number
+// }
+// 
+// This keeps the frontend synchronized with one request.
 // ======================================================
 
 export async function POST(req: Request) {
@@ -34,69 +45,73 @@ export async function POST(req: Request) {
       );
     }
 
-    // Create the reaction document
-    const reaction = await Reaction.create({
+    // Check if this user has already reacted
+
+    const existingReaction = await Reaction.findOne({
       postId,
       userId,
-      type,
     });
 
-    // Return the newly-created reaction
-    return NextResponse.json(reaction, {
-      status: 201,
-    });
-  } catch (error: any) {
-    console.error("POST /reactions error:", error);
+    let liked = false;
 
-    // --------------------------------------------------
-    // Duplicate key error
-    //
-    // This happens if the same user tries to react
-    // to the same post twice because of the unique
-    // index in the Reaction model.
-    // --------------------------------------------------
-    if (error.code === 11000) {
+    // If the reaction exists, remove it
+    if (existingReaction) {
+      await Reaction.deleteOne({
+        _id: existingReaction._id,
+      });
+
+      liked = false;
+    } else {    
+      //Otherwise create a new reaction  
+      await Reaction.create({
+        postId,
+        userId,
+        type,
+      });
+        liked = true;
+      }
+      
+      // Count total reactions after the toggle.
+      const count = await Reaction.countDocuments({
+        postId,
+      });
+      
+      // Return the new state to the frontend.
+      return NextResponse.json({
+        liked,
+        count,
+      });
+    } catch (error) {
+      console.error("POST /reactions error:", error);
+
       return NextResponse.json(
         {
-          error: "You have already reacted to this post.",
+          error: "Failed to toggle reaction",
         },
         {
-          status: 409,
+          status: 500,
         }
       );
     }
-
-    return NextResponse.json(
-      {
-        error: "Failed to create reaction",
-      },
-      {
-        status: 500,
-      }
-    );
   }
-}
 
 // ======================================================
 // GET REACTIONS
 // ======================================================
-// Returns reaction information for a single post.
+// Returns the current number of reactions for a post.
 //
-// Currently this endpoint only returns:
+// Query:
 //
-// {
-//   count: number
-// }
-//
-// Later we'll expand this to include:
+// /api/reactions?postId=123
+//  
+// Response:
 //
 // {
-//   count: number,
-//   reacted: boolean
+//    count: number
 // }
-//
-// so the frontend knows whether the current user has
-// already liked the post.
+// Later we'll expand this endpoint to also return
+// whether the currently authenticated user has
+// already reacted.
 // ======================================================
 
 export async function GET(req: Request) {

@@ -1,25 +1,77 @@
 "use client";
 
+import { useState } from "react";
+
 type PostReactionButtonProps = {
-  liked: boolean;
-  count: number;
-  loading?: boolean;
-  onClick: () => void;
+  postId: string;
+  userId: string;
+  initialLiked: boolean;
+  initialCount: number;
 };
 
 export default function PostReactionButton({
-  liked,
-  count,
-  loading = false,
-  onClick,
+  postId,
+  userId,
+  initialLiked,
+  initialCount,
 }: PostReactionButtonProps) {
+  // ----------------------------
+  // Component state
+  // ----------------------------
+
+  const [liked, setLiked] = useState(initialLiked);
+  const [count, setCount] = useState(initialCount);
+  const [loading, setLoading] = useState(false);
+
+  // ----------------------------
+  // Toggle reaction
+  // ----------------------------
+
+  async function handleReaction() {
+    if (loading) return;
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/reactions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId,
+          userId,
+          type: "like",
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error(data.error);
+        return;
+      }
+
+      setLiked(data.liked);
+      setCount(data.count);
+    } catch (error) {
+      console.error("Reaction failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleReaction}
       disabled={loading}
       aria-pressed={liked}
-      aria-label={liked ? "Remove like" : "Like this post"}
+      aria-label={
+        liked
+          ? "Remove like from this post"
+          : "Like this post"
+      }
       className={`
         inline-flex items-center gap-2
         rounded-lg
