@@ -262,7 +262,7 @@ project-root/
 ### Phase 9: Social Features
 
 * [x] Comments system
-* [/] Post reactions
+* [x] Post reactions
 * [ ] User profiles
 * [ ] Bookmarks
 * [ ] Draft posts
