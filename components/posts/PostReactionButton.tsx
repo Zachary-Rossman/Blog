@@ -23,7 +23,7 @@ export default function PostReactionButton({
   // ----------------------------
   // Component state
   // ----------------------------
-
+  
   const [liked, setLiked] = useState(initialLiked);
   const [count, setCount] = useState(initialCount);
   const [loading, setLoading] = useState(false);

@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
+import { cookies } from "next/headers";
 import Reaction from "@/models/Reaction";
+import { verifyToken } from "@/lib/auth";
 
 // ======================================================
 // TOGGLE REACTION (POST)
 // ======================================================
-// This enDpoint toggles a user's reaction on a post.
+// This endpoint toggles a user's reaction on a post.
 // Workflow:
 // 
 // 1. Receive postId, userId, and reaction type.
@@ -107,11 +109,16 @@ export async function POST(req: Request) {
 // Response:
 //
 // {
-//    count: number
+//    count: number,
+//    liked: boolean
 // }
-// Later we'll expand this endpoint to also return
-// whether the currently authenticated user has
-// already reacted.
+// 
+// count
+// Total number of reactions for this post.
+// 
+// liked
+// Whether the currently authenticated user has
+// already reacted to this post. 
 // ======================================================
 
 export async function GET(req: Request) {
@@ -119,9 +126,22 @@ export async function GET(req: Request) {
     // Connect to MongoDB
     await connectDB();
 
+    const cookieStore = await cookies();
+
+    const token = cookieStore.get("auth_token")?.value;
+
+    let userId: string | null = null;
+
+    if (token) {
+      const payload = verifyToken(token);
+
+      if (payload) {
+        userId = payload.userId;
+      }
+    }
+
     // Read the postId from the query string
     const { searchParams } = new URL(req.url);
-
     const postId = searchParams.get("postId");
 
     // Validate required query parameter
@@ -148,9 +168,19 @@ export async function GET(req: Request) {
       postId,
     });
 
+    // Check if this user has already reacted
+
+    const existingReaction = await Reaction.findOne({
+      postId,
+      userId,
+    });
+
+    const liked = !!existingReaction;
+
     // Return the total reaction count
     return NextResponse.json({
       count,
+      liked,
     });
   } catch (error) {
     console.error("GET /reactions error:", error);

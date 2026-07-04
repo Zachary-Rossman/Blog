@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CommentForm from "@/components/comments/CommentForm";
+import { cookies } from "next/headers";
 import PostReactionButton from "@/components/posts/PostReactionButton";
 
 export default async function PostPage({
@@ -10,26 +11,25 @@ export default async function PostPage({
   const { id } = await params;
 
   // =====================================================
+  // READ COOKIES
+  // =====================================================
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.toString();
+
+  // =====================================================
   // POSTS
   // =====================================================
-
-  const res = await fetch(
-    "http://localhost:3000/api/posts",
-    {
-      cache: "no-store",
-    }
-  );
+  const res = await fetch("http://localhost:3000/api/posts", {
+    cache: "no-store",
+  });
 
   const posts = await res.json();
 
-  const post = posts.find(
-    (p: any) => p._id === id
-  );
+  const post = posts.find((p: any) => p._id === id);
 
   // =====================================================
   // COMMENTS
   // =====================================================
-
   const commentRes = await fetch(
     `http://localhost:3000/api/comments?postId=${id}`,
     {
@@ -40,13 +40,15 @@ export default async function PostPage({
   const comments = await commentRes.json();
 
   // =====================================================
-  // REACTIONS (NEW)
+  // REACTIONS
   // =====================================================
-
   const reactionRes = await fetch(
     `http://localhost:3000/api/reactions?postId=${id}`,
     {
       cache: "no-store",
+      headers: {
+        Cookie: authCookie,
+      },
     }
   );
 
@@ -55,13 +57,10 @@ export default async function PostPage({
   // =====================================================
   // NOT FOUND
   // =====================================================
-
   if (!post) {
     return (
       <main className="max-w-3xl mx-auto px-6 py-20 text-center space-y-4">
-        <h1 className="text-2xl font-bold">
-          Post not found
-        </h1>
+        <h1 className="text-2xl font-bold">Post not found</h1>
 
         <p className="text-gray-500">
           The post you're looking for doesn't exist or may have been removed.
@@ -78,16 +77,12 @@ export default async function PostPage({
   }
 
   return (
-    <main
-      className="min-h-screen bg-gray-50"
-      aria-labelledby="post-title"
-    >
+    <main className="min-h-screen bg-gray-50" aria-labelledby="post-title">
       <article className="max-w-4xl mx-auto px-6 py-14 space-y-10">
 
         {/* =====================================================
             POST HEADER
         ===================================================== */}
-
         <header className="space-y-5">
 
           <div className="space-y-2">
@@ -112,8 +107,6 @@ export default async function PostPage({
 
           </div>
 
-          {/* FEATURED IMAGE */}
-
           {post.imageUrl?.trim() && (
             <img
               src={post.imageUrl}
@@ -125,9 +118,8 @@ export default async function PostPage({
         </header>
 
         {/* =====================================================
-            ARTICLE BODY
+            BODY
         ===================================================== */}
-
         <section
           className="rounded-2xl border bg-white p-8 shadow-sm"
           aria-label="Post content"
@@ -138,15 +130,13 @@ export default async function PostPage({
         </section>
 
         {/* =====================================================
-            REACTIONS (NEW)
+            REACTIONS
         ===================================================== */}
-
         <section
           className="flex items-center justify-between rounded-2xl border bg-white p-6 shadow-sm"
           aria-label="Post reactions"
         >
           <div>
-
             <h2 className="text-lg font-semibold">
               Enjoyed this post?
             </h2>
@@ -154,27 +144,22 @@ export default async function PostPage({
             <p className="text-sm text-gray-500">
               Let the author know by leaving a like.
             </p>
-
           </div>
 
           <PostReactionButton
             postId={post._id}
-            userId={post.authorId}
-            initialLiked={false}
+            initialLiked={reactionData.liked}
             initialCount={reactionData.count}
           />
-
         </section>
 
         {/* =====================================================
             COMMENTS
         ===================================================== */}
-
         <section
           className="space-y-6 pt-6"
           aria-labelledby="comments-heading"
         >
-
           <h2
             id="comments-heading"
             className="text-2xl font-bold text-gray-900"
@@ -188,7 +173,6 @@ export default async function PostPage({
           />
 
           <div className="space-y-4">
-
             {comments.length === 0 ? (
               <p className="text-gray-500">
                 No comments yet. Be the first to comment.
@@ -199,7 +183,6 @@ export default async function PostPage({
                   key={comment._id}
                   className="rounded-2xl border bg-white p-5 shadow-sm space-y-3"
                 >
-
                   {comment.imageUrl && (
                     <img
                       src={comment.imageUrl}
@@ -217,13 +200,10 @@ export default async function PostPage({
                     {comment.user?.username ??
                       "Unknown user"}
                   </p>
-
                 </div>
               ))
             )}
-
           </div>
-
         </section>
 
       </article>
