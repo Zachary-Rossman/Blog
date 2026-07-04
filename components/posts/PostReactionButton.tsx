@@ -1,20 +1,25 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAuth } from "../auth/AuthProvider";
 
 type PostReactionButtonProps = {
   postId: string;
-  userId: string;
   initialLiked: boolean;
   initialCount: number;
 };
 
 export default function PostReactionButton({
   postId,
-  userId,
   initialLiked,
   initialCount,
 }: PostReactionButtonProps) {
+
+  const router = useRouter();
+
+  const { user, loading: authLoading } = useAuth();
+  
   // ----------------------------
   // Component state
   // ----------------------------
@@ -30,6 +35,11 @@ export default function PostReactionButton({
   async function handleReaction() {
     if (loading) return;
 
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -40,7 +50,7 @@ export default function PostReactionButton({
         },
         body: JSON.stringify({
           postId,
-          userId,
+          userId: user.id,
           type: "like",
         }),
       });
@@ -65,7 +75,7 @@ export default function PostReactionButton({
     <button
       type="button"
       onClick={handleReaction}
-      disabled={loading}
+      disabled={loading || authLoading}
       aria-pressed={liked}
       aria-label={
         liked
