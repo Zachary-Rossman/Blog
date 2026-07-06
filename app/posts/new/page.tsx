@@ -4,21 +4,72 @@ import { verifyToken } from "@/lib/auth";
 import CreatePostForm from "@/components/posts/CreatePostForm";
 
 export default async function NewPostPage() {
+  /**
+   * =====================================================
+   * SERVER-SIDE COOKIE ACCESS
+   * =====================================================
+   *
+   * cookies() in App Router:
+   * - runs only on server
+   * - reads request cookies directly
+   *
+   * Used here for authentication gating.
+   */
   const cookieStore = await cookies();
 
   const token = cookieStore.get("auth_token")?.value;
 
-  // 🔐 AUTH GUARD (SERVER SIDE)
+  /**
+   * =====================================================
+   * AUTH GUARD (FIRST LAYER)
+   * =====================================================
+   *
+   * This is a SERVER COMPONENT protection layer.
+   *
+   * WHY THIS MATTERS:
+   * - prevents unauthenticated users from even seeing UI
+   * - more secure than client-side redirects
+   *
+   * FLOW:
+   * 1. Check cookie exists
+   * 2. If missing → redirect immediately
+   */
   if (!token) {
     redirect("/login");
   }
 
+  /**
+   * =====================================================
+   * JWT VERIFICATION
+   * =====================================================
+   *
+   * verifyToken():
+   * - decodes JWT
+   * - ensures token integrity
+   *
+   * IMPORTANT:
+   * Even if token exists, it may be:
+   * - expired
+   * - tampered
+   * - invalid signature
+   */
   const payload = verifyToken(token);
 
   if (!payload) {
     redirect("/login");
   }
 
+  /**
+   * =====================================================
+   * SUCCESS PATH
+   * =====================================================
+   *
+   * At this point:
+   * - user is authenticated
+   * - token is valid
+   *
+   * We safely render form UI.
+   */
   return (
     <main
       className="min-h-[calc(100vh-4rem)] bg-gray-50 px-6 py-12"
@@ -26,7 +77,9 @@ export default async function NewPostPage() {
     >
       <div className="max-w-2xl mx-auto space-y-8">
 
-        {/* HEADER */}
+        {/* =====================================================
+            PAGE HEADER
+        ===================================================== */}
         <header className="space-y-2 text-center">
           <h1
             id="create-post-title"
@@ -40,7 +93,9 @@ export default async function NewPostPage() {
           </p>
         </header>
 
-        {/* FORM CARD */}
+        {/* =====================================================
+            FORM CONTAINER
+        ===================================================== */}
         <section
           className="bg-white border rounded-2xl shadow-sm p-6"
           aria-label="Create post form"

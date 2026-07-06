@@ -3,6 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+/**
+ * =========================================
+ * EDIT POST FORM PROPS
+ * =========================================
+ *
+ * This defines the data required to pre-fill
+ * the edit form.
+ *
+ * IMPORTANT:
+ * These are "initial values" coming from the server.
+ * They are NOT live state.
+ */
 type EditPostFormProps = {
   id: string;
   initialTitle: string;
@@ -18,16 +30,44 @@ export default function EditPostForm({
   initialCategory,
   initialImageUrl,
 }: EditPostFormProps) {
+
   const router = useRouter();
 
+  /**
+   * =========================================
+   * LOCAL FORM STATE
+   * =========================================
+   *
+   * We convert initial props into state so the user
+   * can edit freely without mutating props directly.
+   */
   const [title, setTitle] = useState(initialTitle);
   const [body, setBody] = useState(initialBody);
   const [category, setCategory] = useState(initialCategory);
   const [imageUrl, setImageUrl] = useState(initialImageUrl);
 
+  /**
+   * UI STATE
+   * -----------------------------------------
+   * saving  -> prevents duplicate submissions
+   * error   -> stores validation / API errors
+   */
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
+  /**
+   * =========================================
+   * HANDLE UPDATE (MAIN SUBMISSION LOGIC)
+   * =========================================
+   *
+   * Flow:
+   * 1. Prevent duplicate submissions
+   * 2. Clear previous errors
+   * 3. Validate input fields
+   * 4. Send PUT request to API
+   * 5. Handle success or failure
+   * 6. Redirect back to post page
+   */
   async function handleUpdate(e?: React.FormEvent) {
     e?.preventDefault();
 
@@ -35,7 +75,12 @@ export default function EditPostForm({
 
     setError("");
 
-    // VALIDATION
+    // =========================
+    // VALIDATION LAYER
+    // =========================
+    // Keeps invalid data from ever hitting API
+    // and improves UX immediately in UI.
+
     if (!title.trim()) {
       setError("Title is required");
       return;
@@ -54,6 +99,11 @@ export default function EditPostForm({
     setSaving(true);
 
     try {
+      // =========================
+      // API UPDATE REQUEST
+      // =========================
+      // Sends updated post data to backend
+      // using RESTful PUT method.
       const res = await fetch(`/api/posts/${id}`, {
         method: "PUT",
         headers: {
@@ -69,15 +119,31 @@ export default function EditPostForm({
 
       const data = await res.json();
 
+      // =========================
+      // ERROR HANDLING
+      // =========================
+      // Backend-controlled errors (validation, auth, etc.)
       if (!res.ok) {
         setError(data?.error || "Failed to update post");
         return;
       }
 
+      // =========================
+      // SUCCESS FLOW
+      // =========================
+      // Redirect user back to post page after update
       router.push(`/posts/${id}`);
+
     } catch (err) {
-      console.error(err);
+      // =========================
+      // NETWORK ERROR HANDLING
+      // =========================
+      // Covers:
+      // - no internet
+      // - server crash
+      // - fetch failure
       setError("Network error. Please try again.");
+
     } finally {
       setSaving(false);
     }
@@ -86,7 +152,12 @@ export default function EditPostForm({
   return (
     <form onSubmit={handleUpdate} className="space-y-5">
 
-      {/* ERROR */}
+      {/* =========================================
+          ERROR DISPLAY
+      =========================================
+          Accessible error container tied to inputs
+          via aria-describedby.
+      */}
       {error && (
         <div
           id="form-error"
@@ -97,7 +168,11 @@ export default function EditPostForm({
         </div>
       )}
 
-      {/* TITLE */}
+      {/* =========================================
+          TITLE INPUT
+      =========================================
+          Controlled input bound to React state.
+      */}
       <div className="space-y-1">
         <label htmlFor="title" className="text-sm font-medium">
           Title
@@ -114,7 +189,11 @@ export default function EditPostForm({
         />
       </div>
 
-      {/* CATEGORY */}
+      {/* =========================================
+          CATEGORY SELECT
+      =========================================
+          Controlled dropdown tied to state.
+      */}
       <div className="space-y-1">
         <label htmlFor="category" className="text-sm font-medium">
           Category
@@ -140,7 +219,11 @@ export default function EditPostForm({
         </select>
       </div>
 
-      {/* IMAGE */}
+      {/* =========================================
+          IMAGE URL INPUT
+      =========================================
+          Optional field used for preview images.
+      */}
       <div className="space-y-1">
         <label htmlFor="imageUrl" className="text-sm font-medium">
           Image URL
@@ -155,7 +238,11 @@ export default function EditPostForm({
         />
       </div>
 
-      {/* BODY */}
+      {/* =========================================
+          BODY TEXTAREA
+      =========================================
+          Main content editor for blog post body.
+      */}
       <div className="space-y-1">
         <label htmlFor="body" className="text-sm font-medium">
           Body
@@ -173,7 +260,11 @@ export default function EditPostForm({
         />
       </div>
 
-      {/* SUBMIT */}
+      {/* =========================================
+          SUBMIT BUTTON
+      =========================================
+          Reflects loading state during API call.
+      */}
       <button
         type="submit"
         disabled={saving}

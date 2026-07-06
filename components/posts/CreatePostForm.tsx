@@ -2,19 +2,69 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { CreatePostInput } from "@/types/post";
+import type { CreatePostInput } from "@/types/Post";
+
+/**
+ * ============================================================
+ * CREATE POST FORM
+ * ============================================================
+ *
+ * This component allows an authenticated user to create
+ * a brand new blog post.
+ *
+ * Workflow:
+ *
+ * 1. User fills out the form.
+ * 2. Local validation checks required fields.
+ * 3. Form sends a POST request to /api/posts.
+ * 4. API creates the new post in MongoDB.
+ * 5. User is redirected to the posts page.
+ */
 
 export default function CreatePostForm() {
   const router = useRouter();
 
+  /**
+   * ============================================================
+   * FORM STATE
+   * ============================================================
+   *
+   * Each input is controlled by React state.
+   * This keeps the UI synchronized with the values
+   * the user is currently typing.
+   */
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [category, setCategory] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
+  /**
+   * UI STATE
+   * ------------------------------------------------------------
+   * loading
+   * Prevents duplicate submissions while the request is running.
+   *
+   * error
+   * Stores validation or API errors so they can be displayed
+   * to the user.
+   */
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  /**
+   * ============================================================
+   * HANDLE FORM SUBMISSION
+   * ============================================================
+   *
+   * Flow:
+   *
+   * 1. Prevent browser refresh.
+   * 2. Prevent duplicate submissions.
+   * 3. Validate required fields.
+   * 4. Build the request object.
+   * 5. Send POST request.
+   * 6. Handle success or failure.
+   */
   async function handleSubmit(e?: React.FormEvent) {
     e?.preventDefault();
 
@@ -22,7 +72,12 @@ export default function CreatePostForm() {
 
     setError("");
 
-    // VALIDATION
+    // ========================================================
+    // CLIENT-SIDE VALIDATION
+    // ========================================================
+    // Prevent unnecessary API requests by ensuring the user
+    // has completed the required fields first.
+
     if (!title.trim()) {
       setError("Title is required");
       return;
@@ -40,6 +95,12 @@ export default function CreatePostForm() {
 
     setLoading(true);
 
+    /**
+     * Build the object expected by the API.
+     *
+     * imageUrl is optional, so an empty string is converted
+     * into undefined before being sent.
+     */
     const newPost: CreatePostInput = {
       title,
       body,
@@ -48,6 +109,14 @@ export default function CreatePostForm() {
     };
 
     try {
+      /**
+       * Send the new post to the API.
+       *
+       * The backend is responsible for:
+       * - authentication
+       * - ownership
+       * - database insertion
+       */
       const response = await fetch("/api/posts", {
         method: "POST",
         headers: {
@@ -58,16 +127,41 @@ export default function CreatePostForm() {
 
       const data = await response.json();
 
+      /**
+       * API-level errors.
+       *
+       * These usually come from validation or authorization
+       * performed on the server.
+       */
       if (!response.ok) {
         setError(data?.error || "Failed to create post");
         return;
       }
 
+      /**
+       * Successful creation.
+       *
+       * Redirect back to the posts page where the newly
+       * created post will appear.
+       */
       router.push("/posts");
-    } catch (err) {
-      console.error(err);
+
+    } catch {
+      /**
+       * Network-level errors.
+       *
+       * Examples:
+       * - server offline
+       * - internet connection lost
+       * - request timeout
+       */
       setError("Network error. Please try again.");
+
     } finally {
+      /**
+       * Always restore the button state,
+       * regardless of success or failure.
+       */
       setLoading(false);
     }
   }
@@ -78,7 +172,11 @@ export default function CreatePostForm() {
       className="space-y-5 max-w-md"
       aria-describedby={error ? "form-error" : undefined}
     >
-      {/* ERROR STATE */}
+      {/* ========================================================
+          ERROR DISPLAY
+      ===========================================================
+          Displays validation and API errors to the user.
+      */}
       {error && (
         <div
           id="form-error"
@@ -89,7 +187,9 @@ export default function CreatePostForm() {
         </div>
       )}
 
-      {/* TITLE */}
+      {/* ========================================================
+          TITLE INPUT
+      ======================================================== */}
       <div className="space-y-1">
         <label htmlFor="title" className="text-sm font-medium">
           Title
@@ -105,7 +205,9 @@ export default function CreatePostForm() {
         />
       </div>
 
-      {/* CATEGORY */}
+      {/* ========================================================
+          CATEGORY SELECT
+      ======================================================== */}
       <div className="space-y-1">
         <label htmlFor="category" className="text-sm font-medium">
           Category
@@ -130,7 +232,9 @@ export default function CreatePostForm() {
         </select>
       </div>
 
-      {/* IMAGE URL */}
+      {/* ========================================================
+          OPTIONAL IMAGE URL
+      ======================================================== */}
       <div className="space-y-1">
         <label htmlFor="imageUrl" className="text-sm font-medium">
           Image URL (optional)
@@ -145,7 +249,9 @@ export default function CreatePostForm() {
         />
       </div>
 
-      {/* BODY */}
+      {/* ========================================================
+          POST BODY
+      ======================================================== */}
       <div className="space-y-1">
         <label htmlFor="body" className="text-sm font-medium">
           Body
@@ -162,7 +268,12 @@ export default function CreatePostForm() {
         />
       </div>
 
-      {/* SUBMIT */}
+      {/* ========================================================
+          SUBMIT BUTTON
+      ========================================================
+          The button reflects the current submission state so
+          users cannot accidentally create duplicate posts.
+      */}
       <button
         type="submit"
         disabled={loading}

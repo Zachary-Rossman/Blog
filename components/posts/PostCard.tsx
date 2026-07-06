@@ -2,6 +2,17 @@
 
 import Link from "next/link";
 
+/**
+ * =========================================
+ * POST TYPE
+ * =========================================
+ * This defines the shape of a post object
+ * coming from the backend or parent component.
+ *
+ * NOTE:
+ * - _id is MongoDB identifier
+ * - imageUrl is optional because not all posts have images
+ */
 type Post = {
   _id: string;
   title: string;
@@ -18,6 +29,20 @@ export default function PostCard({
   post?: Post;
   loading?: boolean;
 }) {
+
+  /**
+   * =========================================
+   * LOADING STATE (SKELETON UI)
+   * =========================================
+   *
+   * This is a "skeleton loader" pattern.
+   * It improves UX by showing structure
+   * while data is being fetched.
+   *
+   * IMPORTANT:
+   * - No real data is used here
+   * - Only gray placeholders
+   */
   if (loading) {
     return (
       <div
@@ -36,10 +61,25 @@ export default function PostCard({
     );
   }
 
+  /**
+   * SAFETY CHECK
+   * If no post is passed, render nothing.
+   *
+   * NOTE:
+   * This prevents runtime crashes if parent
+   * data is missing or undefined.
+   */
   if (!post) return null;
 
   return (
     <article>
+
+      {/* =========================================
+          LINK WRAPPER
+      =========================================
+          Entire card is clickable and routes to
+          individual post page.
+      */}
       <Link
         href={`/posts/${post._id}`}
         aria-label={`Read post: ${post.title}`}
@@ -59,7 +99,12 @@ export default function PostCard({
           focus:ring-blue-600
         "
       >
-        {/* IMAGE */}
+
+        {/* =========================================
+            OPTIONAL IMAGE
+        =========================================
+            Only renders if imageUrl exists and is valid.
+        */}
         {post.imageUrl?.trim() && (
           <img
             src={post.imageUrl}
@@ -71,7 +116,12 @@ export default function PostCard({
 
         <div className="space-y-4 p-6">
 
-          {/* CATEGORY */}
+          {/* =========================================
+              CATEGORY BADGE
+          =========================================
+              Used for visual grouping of posts.
+              Could later be replaced with dynamic tags.
+          */}
           <span className="inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700">
             {post.category}
           </span>
@@ -86,7 +136,13 @@ export default function PostCard({
             {post.body}
           </p>
 
-          {/* FOOTER */}
+          {/* =========================================
+              FOOTER SECTION
+          =========================================
+              Displays author info and CTA.
+              This is also where future enhancements
+              like likes/comments preview can be added.
+          */}
           <div className="flex items-center justify-between pt-2 text-sm text-gray-500">
 
             <span>
@@ -96,6 +152,7 @@ export default function PostCard({
               </span>
             </span>
 
+            {/* CTA */}
             <span className="font-medium text-blue-600">
               Read →
             </span>

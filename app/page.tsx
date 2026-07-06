@@ -1,27 +1,54 @@
 import Hero from "@/components/layout/Hero";
 import PostList from "@/components/posts/PostList";
 
+/**
+ * =====================================================
+ * HOME PAGE (ROOT ROUTE)
+ * =====================================================
+ *
+ * PURPOSE:
+ * - Landing page of the application
+ * - Combines:
+ *    • Hero marketing section
+ *    • Featured posts preview
+ *    • Recent posts feed
+ *
+ * DATA STRATEGY:
+ * - Fetches all posts from API route
+ * - Uses `no-store` to ensure fresh data on every request
+ *   (disables Next.js caching for real-time feed behavior)
+ *
+ * NOTE:
+ * - This is a server component (async function)
+ * - No client-side state is used here
+ */
 export default async function Home() {
   const response = await fetch("http://localhost:3000/api/posts", {
-    cache: "no-store", // ensures fresh feed every load
+    cache: "no-store",
   });
 
   const posts = await response.json();
 
-  // split for UX structure
+  // =====================================================
+  // DATA SPLITTING FOR UI STRUCTURE
+  // =====================================================
   const featuredPosts = posts.slice(0, 2);
   const recentPosts = posts.slice(2, 8);
 
   return (
     <main className="max-w-7xl mx-auto px-6 py-12 space-y-16">
 
-      {/* HERO */}
+      {/* =====================================================
+          HERO SECTION
+      ===================================================== */}
       <Hero
         title="Build. Learn. Share."
         description="A modern full-stack blogging platform where developers can publish tutorials, document projects, and share ideas with the community."
       />
 
-      {/* FEATURED SECTION */}
+      {/* =====================================================
+          FEATURED POSTS
+      ===================================================== */}
       <section>
         <div className="mb-6">
           <h2 className="text-3xl font-bold">
@@ -38,7 +65,9 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* RECENT SECTION */}
+      {/* =====================================================
+          RECENT POSTS
+      ===================================================== */}
       <section>
         <div className="mb-6">
           <h2 className="text-3xl font-bold">

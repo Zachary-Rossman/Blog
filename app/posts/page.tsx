@@ -4,12 +4,53 @@ import PostList from "@/components/posts/PostList";
 import { verifyToken } from "@/lib/auth";
 
 export default async function PostsPage() {
+  /**
+   * =====================================================
+   * SERVER-SIDE COOKIE ACCESS
+   * =====================================================
+   *
+   * This runs on the server during render.
+   * Used to determine auth state before UI is generated.
+   */
   const cookieStore = await cookies();
 
   const token = cookieStore.get("auth_token")?.value;
 
+  /**
+   * =====================================================
+   * AUTH STATE CHECK (LIGHTWEIGHT)
+   * =====================================================
+   *
+   * isLoggedIn:
+   * - derived from cookie + JWT verification
+   *
+   * IMPORTANT:
+   * - This does NOT block the page
+   * - It only affects UI (conditional rendering)
+   *
+   * This is a "soft guard" compared to redirect-based protection.
+   */
   const isLoggedIn = !!(token && verifyToken(token));
 
+  /**
+   * =====================================================
+   * POSTS FETCH (SERVER RENDERED)
+   * =====================================================
+   *
+   * cache: "no-store"
+   * - ensures fresh feed every request
+   *
+   * DESIGN DECISION:
+   * - fetching ALL posts
+   * - passing to PostList for rendering
+   *
+   * NOTE:
+   * This is a simple architecture choice for learning purposes.
+   * In production, you may want:
+   * - pagination
+   * - filtering
+   * - server-side query params
+   */
   const res = await fetch("http://localhost:3000/api/posts", {
     cache: "no-store",
   });
@@ -18,10 +59,12 @@ export default async function PostsPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      
+
       <div className="max-w-5xl mx-auto px-6 py-12 space-y-10">
 
-        {/* HEADER */}
+        {/* =====================================================
+            PAGE HEADER SECTION
+        ===================================================== */}
         <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
 
           {/* TITLE BLOCK */}
@@ -35,7 +78,9 @@ export default async function PostsPage() {
             </p>
           </div>
 
-          {/* CTA */}
+          {/* =====================================================
+              CONDITIONAL CTA (AUTH-BASED UI)
+          ===================================================== */}
           {isLoggedIn && (
             <Link
               href="/posts/new"
@@ -46,7 +91,9 @@ export default async function PostsPage() {
           )}
         </header>
 
-        {/* FEED CONTAINER */}
+        {/* =====================================================
+            POSTS FEED CONTAINER
+        ===================================================== */}
         <section
           className="bg-white border rounded-2xl shadow-sm p-6"
           aria-label="Posts feed"

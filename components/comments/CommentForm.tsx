@@ -2,6 +2,26 @@
 
 import { useState } from "react";
 
+/**
+ * ============================================================
+ * COMMENT FORM
+ * ============================================================
+ *
+ * This component allows an authenticated user to submit a
+ * comment on a blog post.
+ *
+ * Responsibilities:
+ *
+ * • Manage the form state.
+ * • Validate user input.
+ * • Send the comment to the API.
+ * • Display loading and error states.
+ * • Notify the parent component after a successful submission.
+ *
+ * The actual database work happens inside the API route.
+ * This component only gathers user input and sends it.
+ */
+
 type CommentFormProps = {
   postId: string;
   userId: string;
@@ -13,17 +33,54 @@ export default function CommentForm({
   userId,
   onCommentAdded,
 }: CommentFormProps) {
+
+  /* ==========================================================
+     COMPONENT STATE
+     ==========================================================
+     content
+       Stores the user's comment.
+
+     imageUrl
+       Optional image attached to the comment.
+
+     loading
+       Prevents duplicate submissions while the request
+       is running.
+
+     error
+       Displays validation or server errors.
+  ========================================================== */
+
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  /**
+   * ==========================================================
+   * HANDLE SUBMIT
+   * ==========================================================
+   *
+   * Workflow:
+   *
+   * 1. Prevent normal form submission.
+   * 2. Prevent duplicate requests.
+   * 3. Validate required fields.
+   * 4. Send the comment to the API.
+   * 5. Clear the form after success.
+   * 6. Notify the parent component so it can refresh comments.
+   */
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     if (loading) return;
+
     setError("");
 
+    // ---------------------------------------------
+    // Validation
+    // ---------------------------------------------
     if (!content.trim()) {
       setError("Comment cannot be empty");
       return;
@@ -52,14 +109,19 @@ export default function CommentForm({
         return;
       }
 
+      // Reset the form after a successful submission.
       setContent("");
       setImageUrl("");
 
+      // Notify the parent component that a comment
+      // was successfully created.
       onCommentAdded?.();
-    } catch (err) {
-      console.error(err);
+
+    } catch {
+      // Network or unexpected error.
       setError("Network error. Please try again.");
     } finally {
+      // Always restore the form to its normal state.
       setLoading(false);
     }
   }
@@ -70,7 +132,10 @@ export default function CommentForm({
       className="rounded-2xl border bg-white p-6 shadow-sm space-y-4"
       aria-describedby={error ? "comment-error" : undefined}
     >
-      {/* ERROR */}
+
+      {/* ======================================================
+          ERROR MESSAGE
+      ======================================================= */}
       {error && (
         <div
           id="comment-error"
@@ -82,9 +147,15 @@ export default function CommentForm({
         </div>
       )}
 
-      {/* COMMENT */}
+      {/* ======================================================
+          COMMENT FIELD
+      ======================================================= */}
       <div className="space-y-1">
-        <label htmlFor="comment" className="text-sm font-medium text-gray-700">
+
+        <label
+          htmlFor="comment"
+          className="text-sm font-medium text-gray-700"
+        >
           Comment
         </label>
 
@@ -97,11 +168,18 @@ export default function CommentForm({
           className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Write your comment..."
         />
+
       </div>
 
-      {/* IMAGE URL */}
+      {/* ======================================================
+          OPTIONAL IMAGE
+      ======================================================= */}
       <div className="space-y-1">
-        <label htmlFor="imageUrl" className="text-sm font-medium text-gray-700">
+
+        <label
+          htmlFor="imageUrl"
+          className="text-sm font-medium text-gray-700"
+        >
           Image URL (optional)
         </label>
 
@@ -113,9 +191,12 @@ export default function CommentForm({
           className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="https://..."
         />
+
       </div>
 
-      {/* BUTTON */}
+      {/* ======================================================
+          SUBMIT BUTTON
+      ======================================================= */}
       <button
         type="submit"
         disabled={loading}
@@ -124,6 +205,7 @@ export default function CommentForm({
       >
         {loading ? "Posting..." : "Post Comment"}
       </button>
+
     </form>
   );
 }

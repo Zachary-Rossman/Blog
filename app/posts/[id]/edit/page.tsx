@@ -16,21 +16,66 @@ export default function EditPostPage() {
   const params = useParams();
   const router = useRouter();
 
+  /**
+   * =====================================
+   * STATE MANAGEMENT
+   * =====================================
+   *
+   * post:
+   * - Holds the selected post being edited
+   * - Starts as null until fetched
+   *
+   * loading:
+   * - Controls initial data fetch state
+   * - Prevents UI rendering before data exists
+   */
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
 
+  /**
+   * =====================================
+   * DATA FETCHING (CLIENT-SIDE LOAD)
+   * =====================================
+   *
+   * IMPORTANT DESIGN DECISION:
+   * Instead of fetching a single post by ID,
+   * this page fetches ALL posts then filters client-side.
+   *
+   * WHY THIS IS OK FOR LEARNING:
+   * - Simplifies API usage during early development
+   * - Avoids needing a dedicated GET /api/posts/:id route
+   *
+   * WHY THIS WOULD NOT SCALE:
+   * - Unnecessary data transfer
+   * - Slower performance as dataset grows
+   *
+   * FUTURE OPTIMIZATION:
+   * Replace with:
+   * GET /api/posts/[id]
+   */
   useEffect(() => {
     async function loadPost() {
       try {
         const res = await fetch("/api/posts");
         const data = await res.json();
 
+        /**
+         * =====================================
+         * CLIENT-SIDE FILTERING LOGIC
+         * =====================================
+         *
+         * params.id comes from dynamic route:
+         * /posts/[id]/edit
+         *
+         * We find the matching post locally.
+         */
         const found = data.find(
           (p: Post) => p._id === params.id
         );
 
         setPost(found || null);
       } finally {
+        // Always stop loading, even if fetch fails
         setLoading(false);
       }
     }
@@ -38,7 +83,14 @@ export default function EditPostPage() {
     loadPost();
   }, [params.id]);
 
-  // ⏳ LOADING STATE
+  /**
+   * =====================================
+   * LOADING STATE UI
+   * =====================================
+   *
+   * Prevents rendering edit form before data exists.
+   * Improves UX and avoids undefined errors.
+   */
   if (loading) {
     return (
       <main
@@ -51,7 +103,15 @@ export default function EditPostPage() {
     );
   }
 
-  // ❌ NOT FOUND STATE
+  /**
+   * =====================================
+   * ERROR / NOT FOUND STATE
+   * =====================================
+   *
+   * If no post matches the ID:
+   * - show user-friendly fallback UI
+   * - allow navigation back to posts list
+   */
   if (!post) {
     return (
       <main className="max-w-2xl mx-auto px-6 py-12 text-center space-y-4">
@@ -71,6 +131,20 @@ export default function EditPostPage() {
     );
   }
 
+  /**
+   * =====================================
+   * MAIN EDIT PAGE UI
+   * =====================================
+   *
+   * This section:
+   * - Wraps the EditPostForm component
+   * - Passes pre-filled values (controlled initialization)
+   * - Keeps this page as a "layout + data loader"
+   *
+   * IMPORTANT PATTERN:
+   * This is a container component.
+   * EditPostForm is the logic-heavy component.
+   */
   return (
     <main
       className="min-h-[calc(100vh-4rem)] bg-gray-50 px-6 py-12"

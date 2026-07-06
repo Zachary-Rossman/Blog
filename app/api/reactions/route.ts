@@ -7,39 +7,61 @@ import { verifyToken } from "@/lib/auth";
 // ======================================================
 // TOGGLE REACTION (POST)
 // ======================================================
-// This endpoint toggles a user's reaction on a post.
-// Workflow:
-// 
-// 1. Receive postId, userId, and reaction type.
-// 2. Check whether the reaction already exists.
-// 3. If it exists:
-//      - Delete it (unlike)
-//      - liked = false
-// 4. If it does not exist:
-//      - Create it (like)
-//      - liked = true
-// 5. Count total reactions for that post.
-// 6. Return:
-
+//
+// This endpoint is responsible for handling the "Like"
+// button on an individual post.
+//
+// Rather than having separate Like and Unlike endpoints,
+// this route simply toggles the reaction:
+//
+// • If the user has already liked the post,
+//   remove the reaction.
+//
+// • If the user has not liked the post,
+//   create a new reaction.
+//
+// The frontend only needs one request because this route
+// returns BOTH:
+//
 // {
-//    liked: boolean,
-//    count: number
+//   liked: boolean,
+//   count: number
 // }
-// 
-// This keeps the frontend synchronized with one request.
+//
+// liked
+//   Whether the current user now likes the post.
+//
+// count
+//   The updated total number of reactions.
+//
 // ======================================================
 
 export async function POST(req: Request) {
   try {
-    // Connect to MongoDB
+    // --------------------------------------------------
+    // Step 1
+    // Connect to MongoDB.
+    // --------------------------------------------------
     await connectDB();
 
-    // Parse incoming JSON
+    // --------------------------------------------------
+    // Step 2
+    // Read the request body sent by the frontend.
+    // --------------------------------------------------
     const body = await req.json();
 
     const { postId, userId, type } = body;
 
-    // Validate required fields
+    // --------------------------------------------------
+    // Step 3
+    // Validate required values.
+    //
+    // Every reaction must belong to:
+    //
+    // • a post
+    // • a user
+    // • a reaction type
+    // --------------------------------------------------
     if (!postId || !userId || !type) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -47,8 +69,12 @@ export async function POST(req: Request) {
       );
     }
 
-    // Check if this user has already reacted
-
+    // --------------------------------------------------
+    // Step 4
+    // Determine whether this user has already reacted.
+    //
+    // Only one reaction per user per post is allowed.
+    // --------------------------------------------------
     const existingReaction = await Reaction.findOne({
       postId,
       userId,
@@ -56,76 +82,119 @@ export async function POST(req: Request) {
 
     let liked = false;
 
-    // If the reaction exists, remove it
+    // --------------------------------------------------
+    // Step 5
+    // Toggle the reaction.
+    // --------------------------------------------------
+
     if (existingReaction) {
+      // User already liked the post.
+      // Remove the reaction.
       await Reaction.deleteOne({
         _id: existingReaction._id,
       });
 
       liked = false;
-    } else {    
-      //Otherwise create a new reaction  
+    } else {
+      // User has not liked the post.
+      // Create a new reaction.
       await Reaction.create({
         postId,
         userId,
         type,
       });
-        liked = true;
-      }
-      
-      // Count total reactions after the toggle.
-      const count = await Reaction.countDocuments({
-        postId,
-      });
-      
-      // Return the new state to the frontend.
-      return NextResponse.json({
-        liked,
-        count,
-      });
-    } catch (error) {
-      console.error("POST /reactions error:", error);
 
-      return NextResponse.json(
-        {
-          error: "Failed to toggle reaction",
-        },
-        {
-          status: 500,
-        }
-      );
+      liked = true;
     }
+
+    // --------------------------------------------------
+    // Step 6
+    // Count every reaction currently attached to
+    // this post.
+    //
+    // countDocuments() is efficient because MongoDB
+    // performs the count without returning every
+    // document.
+    // --------------------------------------------------
+    const count = await Reaction.countDocuments({
+      postId,
+    });
+
+    // --------------------------------------------------
+    // Step 7
+    // Return the updated state so the React component
+    // can immediately update its UI.
+    // --------------------------------------------------
+    return NextResponse.json({
+      liked,
+      count,
+    });
+  } catch (error) {
+    // Server-side logging is useful for diagnosing
+    // unexpected production issues.
+    console.error("POST /reactions error:", error);
+
+    return NextResponse.json(
+      {
+        error: "Failed to toggle reaction",
+      },
+      {
+        status: 500,
+      }
+    );
   }
+}
 
 // ======================================================
 // GET REACTIONS
 // ======================================================
-// Returns the current number of reactions for a post.
 //
-// Query:
+// Returns the information necessary to render the
+// reaction button when a post page first loads.
 //
-// /api/reactions?postId=123
-//  
+// Example:
+//
+// GET /api/reactions?postId=123
+//
 // Response:
 //
 // {
-//    count: number,
-//    liked: boolean
+//   count: number,
+//   liked: boolean
 // }
-// 
+//
 // count
-// Total number of reactions for this post.
-// 
+//   Total number of reactions on this post.
+//
 // liked
-// Whether the currently authenticated user has
-// already reacted to this post. 
+//   Whether the CURRENT authenticated user has already
+//   reacted to this post.
+//
+// This allows the page to immediately display:
+//
+// ❤️  if already liked
+//
+// 🤍  if not yet liked
+//
+// without waiting for another client action.
+//
 // ======================================================
 
 export async function GET(req: Request) {
   try {
-    // Connect to MongoDB
+    // --------------------------------------------------
+    // Step 1
+    // Connect to MongoDB.
+    // --------------------------------------------------
     await connectDB();
 
+    // --------------------------------------------------
+    // Step 2
+    // Read the authentication cookie.
+    //
+    // If a user is logged in we can determine whether
+    // THEY specifically have already liked this post.
+    // --------------------------------------------------
     const cookieStore = await cookies();
 
     const token = cookieStore.get("auth_token")?.value;
@@ -140,11 +209,14 @@ export async function GET(req: Request) {
       }
     }
 
-    // Read the postId from the query string
+    // --------------------------------------------------
+    // Step 3
+    // Read the requested post ID from the query string.
+    // --------------------------------------------------
     const { searchParams } = new URL(req.url);
+
     const postId = searchParams.get("postId");
 
-    // Validate required query parameter
     if (!postId) {
       return NextResponse.json(
         {
@@ -157,19 +229,21 @@ export async function GET(req: Request) {
     }
 
     // --------------------------------------------------
-    // Count reactions without loading every document.
-    //
-    // countDocuments() is more efficient than:
-    //
-    // const reactions = await Reaction.find(...)
-    // reactions.length
+    // Step 4
+    // Count every reaction on the post.
     // --------------------------------------------------
     const count = await Reaction.countDocuments({
       postId,
     });
 
-    // Check if this user has already reacted
-
+    // --------------------------------------------------
+    // Step 5
+    // Check whether THIS authenticated user has already
+    // reacted.
+    //
+    // If userId is null (guest visitor), this query
+    // naturally returns null.
+    // --------------------------------------------------
     const existingReaction = await Reaction.findOne({
       postId,
       userId,
@@ -177,12 +251,18 @@ export async function GET(req: Request) {
 
     const liked = !!existingReaction;
 
-    // Return the total reaction count
+    // --------------------------------------------------
+    // Step 6
+    // Return the data needed to initialize the reaction
+    // button.
+    // --------------------------------------------------
     return NextResponse.json({
       count,
       liked,
     });
   } catch (error) {
+    // Server-side logging is useful for diagnosing
+    // unexpected production issues.
     console.error("GET /reactions error:", error);
 
     return NextResponse.json(

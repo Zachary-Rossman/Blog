@@ -19,7 +19,18 @@ export default function DashboardPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loadingPosts, setLoadingPosts] = useState(true);
 
-  // 🔐 AUTH GUARD
+  // ======================================================
+  // 🔐 AUTH GUARD (CLIENT-SIDE PROTECTION)
+  // ======================================================
+  // This ensures:
+  // - If auth is still loading → wait
+  // - If user is NOT logged in → redirect to login page
+  //
+  // Important:
+  // This is NOT secure by itself.
+  // Real security still comes from API routes (server-side JWT checks).
+  // This is only for UX protection (prevents flashing dashboard).
+  // ======================================================
   useEffect(() => {
     if (loading) return;
 
@@ -28,7 +39,19 @@ export default function DashboardPage() {
     }
   }, [user, loading, router]);
 
+  // ======================================================
   // 📦 FETCH USER POSTS
+  // ======================================================
+  // Flow:
+  // 1. Call /api/posts (gets ALL posts)
+  // 2. Filter only posts belonging to current user
+  // 3. Store in local state
+  //
+  // Note:
+  // Filtering happens client-side here.
+  // A more scalable version would be a dedicated API endpoint:
+  // /api/posts/mine
+  // ======================================================
   useEffect(() => {
     async function fetchPosts() {
       try {
@@ -48,7 +71,19 @@ export default function DashboardPage() {
     if (user) fetchPosts();
   }, [user]);
 
-  // 🗑 DELETE POST
+  // ======================================================
+  // 🗑 DELETE POST HANDLER
+  // ======================================================
+  // Flow:
+  // 1. Ask user for confirmation (native confirm dialog)
+  // 2. Call DELETE /api/posts/:id
+  // 3. Optimistically remove post from UI
+  //
+  // Important:
+  // Backend enforces:
+  // - JWT authentication
+  // - Ownership check (authorId === userId)
+  // ======================================================
   async function handleDelete(id: string) {
     const confirmDelete = confirm(
       "Are you sure you want to delete this post?"
@@ -63,7 +98,9 @@ export default function DashboardPage() {
     setPosts((prev) => prev.filter((p) => p._id !== id));
   }
 
-  // ⏳ LOADING STATE
+  // ======================================================
+  // ⏳ LOADING STATE (AUTH OR DATA FETCHING)
+  // ======================================================
   if (loading || loadingPosts) {
     return (
       <main
@@ -83,8 +120,9 @@ export default function DashboardPage() {
       className="max-w-6xl mx-auto px-6 py-12 space-y-10"
       aria-labelledby="dashboard-title"
     >
-
-      {/* HEADER */}
+      {/* ======================================================
+          HEADER SECTION
+          ====================================================== */}
       <section className="space-y-2">
         <h1
           id="dashboard-title"
@@ -94,7 +132,7 @@ export default function DashboardPage() {
         </h1>
 
         <p className="text-gray-500">
-          Welcome back,{" "}
+          Welcome back{" "}
           <span className="font-medium text-gray-700">
             {user.username}
           </span>
@@ -102,13 +140,19 @@ export default function DashboardPage() {
         </p>
       </section>
 
-      {/* PROFILE CARD */}
+      {/* ======================================================
+          PROFILE SUMMARY CARD
+          ======================================================
+          Displays:
+          - Username
+          - Email
+          - Total posts created
+          ====================================================== */}
       <section
         className="rounded-2xl border bg-white p-6 shadow-sm"
         aria-label="User profile summary"
       >
         <div className="grid gap-6 md:grid-cols-3">
-
           <div>
             <p className="text-sm text-gray-500">Username</p>
             <p className="mt-1 font-semibold">{user.username}</p>
@@ -125,11 +169,14 @@ export default function DashboardPage() {
               {posts.length}
             </p>
           </div>
-
         </div>
       </section>
 
-      {/* ACTION BAR */}
+      {/* ======================================================
+          ACTION BAR
+          ======================================================
+          Primary action: Create new post
+          ====================================================== */}
       <section className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">My Posts</h2>
 
@@ -142,7 +189,11 @@ export default function DashboardPage() {
         </button>
       </section>
 
-      {/* EMPTY STATE */}
+      {/* ======================================================
+          EMPTY STATE
+          ======================================================
+          Shows when user has no posts
+          ====================================================== */}
       {posts.length === 0 ? (
         <section
           className="rounded-2xl border bg-white p-12 text-center shadow-sm"
@@ -162,17 +213,16 @@ export default function DashboardPage() {
           </button>
         </section>
       ) : (
-        <section
-          className="space-y-4"
-          aria-label="User posts list"
-        >
+        // ======================================================
+        // POSTS LIST
+        // ======================================================
+        <section className="space-y-4" aria-label="User posts list">
           {posts.map((post) => (
             <article
               key={post._id}
               className="rounded-2xl border bg-white p-6 shadow-sm transition hover:shadow-md"
             >
               <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-
                 <div>
                   <h3 className="text-xl font-semibold">
                     {post.title}
@@ -183,8 +233,8 @@ export default function DashboardPage() {
                   </p>
                 </div>
 
+                {/* ACTION BUTTONS */}
                 <div className="flex gap-3">
-
                   <button
                     onClick={() =>
                       router.push(`/posts/${post._id}/edit`)
@@ -202,15 +252,12 @@ export default function DashboardPage() {
                   >
                     Delete
                   </button>
-
                 </div>
-
               </div>
             </article>
           ))}
         </section>
       )}
-
     </main>
   );
 }

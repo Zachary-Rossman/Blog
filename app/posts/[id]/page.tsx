@@ -10,15 +10,43 @@ export default async function PostPage({
 }) {
   const { id } = await params;
 
-  // =====================================================
-  // READ COOKIES
-  // =====================================================
+  /**
+   * =====================================================
+   * COOKIE ACCESS (SERVER SIDE)
+   * =====================================================
+   *
+   * cookies() gives access to request cookies in a Server Component.
+   *
+   * IMPORTANT:
+   * - This runs on the server
+   * - Used here to forward auth state to API requests
+   *
+   * authCookie:
+   * - stringified cookie header
+   * - passed into fetch manually for authenticated endpoints
+   */
   const cookieStore = await cookies();
   const authCookie = cookieStore.toString();
 
-  // =====================================================
-  // POSTS
-  // =====================================================
+  /**
+   * =====================================================
+   * POSTS FETCH (SERVER-SIDE RENDERING)
+   * =====================================================
+   *
+   * cache: "no-store"
+   * - forces fresh data on every request
+   * - prevents stale post content
+   *
+   * DESIGN CHOICE:
+   * - Fetches ALL posts
+   * - Then filters in memory
+   *
+   * GOOD FOR LEARNING:
+   * - simple
+   *
+   * NOT OPTIMAL FOR SCALE:
+   * - should be GET /api/posts/:id
+   */
   const res = await fetch("http://localhost:3000/api/posts", {
     cache: "no-store",
   });
@@ -27,9 +55,18 @@ export default async function PostPage({
 
   const post = posts.find((p: any) => p._id === id);
 
-  // =====================================================
-  // COMMENTS
-  // =====================================================
+  /**
+   * =====================================================
+   * COMMENTS FETCH
+   * =====================================================
+   *
+   * GET /api/comments?postId=id
+   *
+   * Returns all comments for this post.
+   *
+   * cache: "no-store"
+   * - ensures real-time comment updates
+   */
   const commentRes = await fetch(
     `http://localhost:3000/api/comments?postId=${id}`,
     {
@@ -39,9 +76,18 @@ export default async function PostPage({
 
   const comments = await commentRes.json();
 
-  // =====================================================
-  // REACTIONS
-  // =====================================================
+  /**
+   * =====================================================
+   * REACTIONS FETCH (LIKE SYSTEM)
+   * =====================================================
+   *
+   * KEY DETAIL:
+   * - This endpoint depends on authentication
+   * - Cookie is manually forwarded in headers
+   *
+   * Why?
+   * - Server Components do NOT automatically include browser cookies in fetch
+   */
   const reactionRes = await fetch(
     `http://localhost:3000/api/reactions?postId=${id}`,
     {
@@ -54,9 +100,15 @@ export default async function PostPage({
 
   const reactionData = await reactionRes.json();
 
-  // =====================================================
-  // NOT FOUND
-  // =====================================================
+  /**
+   * =====================================================
+   * NOT FOUND STATE
+   * =====================================================
+   *
+   * If post lookup fails after fetch:
+   * - render clean fallback UI
+   * - avoid crashing page
+   */
   if (!post) {
     return (
       <main className="max-w-3xl mx-auto px-6 py-20 text-center space-y-4">
@@ -81,16 +133,18 @@ export default async function PostPage({
       <article className="max-w-4xl mx-auto px-6 py-14 space-y-10">
 
         {/* =====================================================
-            POST HEADER
+            POST HEADER SECTION
         ===================================================== */}
         <header className="space-y-5">
 
           <div className="space-y-2">
 
+            {/* CATEGORY TAG */}
             <p className="text-sm font-medium uppercase tracking-wide text-blue-600">
               {post.category}
             </p>
 
+            {/* TITLE */}
             <h1
               id="post-title"
               className="text-5xl font-bold tracking-tight text-gray-900"
@@ -98,6 +152,7 @@ export default async function PostPage({
               {post.title}
             </h1>
 
+            {/* AUTHOR */}
             <p className="text-gray-500">
               Written by{" "}
               <span className="font-medium text-gray-700">
@@ -107,6 +162,7 @@ export default async function PostPage({
 
           </div>
 
+          {/* FEATURE IMAGE (OPTIONAL) */}
           {post.imageUrl?.trim() && (
             <img
               src={post.imageUrl}
@@ -118,7 +174,7 @@ export default async function PostPage({
         </header>
 
         {/* =====================================================
-            BODY
+            POST BODY
         ===================================================== */}
         <section
           className="rounded-2xl border bg-white p-8 shadow-sm"
@@ -130,7 +186,7 @@ export default async function PostPage({
         </section>
 
         {/* =====================================================
-            REACTIONS
+            REACTION SYSTEM
         ===================================================== */}
         <section
           className="flex items-center justify-between rounded-2xl border bg-white p-6 shadow-sm"
@@ -154,7 +210,7 @@ export default async function PostPage({
         </section>
 
         {/* =====================================================
-            COMMENTS
+            COMMENTS SECTION
         ===================================================== */}
         <section
           className="space-y-6 pt-6"
@@ -167,11 +223,13 @@ export default async function PostPage({
             Comments
           </h2>
 
+          {/* COMMENT FORM */}
           <CommentForm
             postId={post._id}
             userId={post.authorId}
           />
 
+          {/* COMMENT LIST */}
           <div className="space-y-4">
             {comments.length === 0 ? (
               <p className="text-gray-500">
@@ -183,6 +241,7 @@ export default async function PostPage({
                   key={comment._id}
                   className="rounded-2xl border bg-white p-5 shadow-sm space-y-3"
                 >
+                  {/* OPTIONAL IMAGE ATTACHMENT */}
                   {comment.imageUrl && (
                     <img
                       src={comment.imageUrl}
@@ -191,14 +250,15 @@ export default async function PostPage({
                     />
                   )}
 
+                  {/* COMMENT CONTENT */}
                   <p className="text-gray-800">
                     {comment.content}
                   </p>
 
+                  {/* USER INFO */}
                   <p className="text-xs text-gray-500">
                     User:{" "}
-                    {comment.user?.username ??
-                      "Unknown user"}
+                    {comment.user?.username ?? "Unknown user"}
                   </p>
                 </div>
               ))

@@ -6,14 +6,60 @@ import type { LoginInput } from "@/types/User";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 export default function LoginForm() {
+  // =====================================================
+  // HOOKS
+  // =====================================================
+  // router
+  // Navigates the user after a successful login.
+  //
+  // refreshUser
+  // Refreshes the global authentication context after
+  // the server creates the authentication cookie.
+  // Without this call, the navbar and protected UI would
+  // still think the user is logged out until the page
+  // reloads.
+  // =====================================================
+
   const router = useRouter();
   const { refreshUser } = useAuth();
+
+  // =====================================================
+  // FORM STATE
+  // =====================================================
+  // email
+  // Stores the user's email address.
+  //
+  // password
+  // Stores the user's password.
+  //
+  // error
+  // Displays validation or server errors.
+  //
+  // loading
+  // Prevents duplicate submissions while the request
+  // is being processed.
+  // =====================================================
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // =====================================================
+  // LOGIN SUBMISSION
+  // =====================================================
+  // Workflow
+  //
+  // 1. Prevent the browser from refreshing.
+  // 2. Prevent duplicate requests.
+  // 3. Validate user input.
+  // 4. Build the login payload.
+  // 5. Send credentials to the login API.
+  // 6. Refresh the authentication context so every
+  //    component immediately knows the user is logged in.
+  // 7. Redirect the user to the dashboard.
+  // =====================================================
 
   async function handleSubmit(e?: React.FormEvent) {
     if (e) e.preventDefault();
@@ -22,7 +68,10 @@ export default function LoginForm() {
 
     setError(null);
 
-    // VALIDATION
+    // -------------------------------------------------
+    // CLIENT VALIDATION
+    // -------------------------------------------------
+
     if (!email.trim()) {
       setError("Email is required");
       return;
@@ -51,15 +100,30 @@ export default function LoginForm() {
 
       const data = await response.json();
 
+      // -------------------------------------------------
+      // SERVER VALIDATION
+      // -------------------------------------------------
+      // Display the API error instead of navigating.
+      // -------------------------------------------------
+
       if (!response.ok) {
         setError(data.error || "Login failed");
         return;
       }
 
+      // -------------------------------------------------
+      // AUTHENTICATION SUCCESS
+      // -------------------------------------------------
+      // Update the global auth provider before navigating.
+      // This keeps the Navbar, protected routes, and
+      // authenticated UI synchronized immediately.
+      // -------------------------------------------------
+
       await refreshUser();
+
       router.push("/dashboard");
-    } catch (err) {
-      console.error(err);
+    } catch {
+      // Network failures (offline, server unavailable, etc.)
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
@@ -72,7 +136,10 @@ export default function LoginForm() {
       className="space-y-5 max-w-md"
       aria-describedby={error ? "login-error" : undefined}
     >
-      {/* ERROR */}
+      {/* =====================================================
+          ERROR MESSAGE
+      ===================================================== */}
+
       {error && (
         <div
           id="login-error"
@@ -84,7 +151,10 @@ export default function LoginForm() {
         </div>
       )}
 
-      {/* EMAIL FIELD */}
+      {/* =====================================================
+          EMAIL FIELD
+      ===================================================== */}
+
       <div className="space-y-1">
         <label htmlFor="email" className="text-sm font-medium">
           Email
@@ -103,7 +173,10 @@ export default function LoginForm() {
         />
       </div>
 
-      {/* PASSWORD FIELD */}
+      {/* =====================================================
+          PASSWORD FIELD
+      ===================================================== */}
+
       <div className="space-y-1">
         <label htmlFor="password" className="text-sm font-medium">
           Password
@@ -122,7 +195,10 @@ export default function LoginForm() {
         />
       </div>
 
-      {/* SUBMIT BUTTON */}
+      {/* =====================================================
+          SUBMIT BUTTON
+      ===================================================== */}
+
       <button
         type="submit"
         disabled={loading}

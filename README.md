@@ -1,26 +1,42 @@
 # Blog
 
-Current Version: Pre-Alpha
+**Current Version:** V1.0.0 (Feature Complete - Testing Phase)
 
-This project is a full-stack blog application that allows users to create accounts, manage their profiles, publish posts, edit existing content, delete their own posts, interact with other users through comments and likes, and save favorite posts for later viewing.
+This project is a full-stack blog application that allows users to create accounts, manage profiles, publish posts, edit existing content, delete their own posts, and interact with other users through comments and reactions. Users can also view and browse posts in a public feed experience.
 
 ---
 
 ## Overview
 
-This is a full-stack blog application built with Next.js. This project's goal is to learn how to build a full stack application using modern web development concepts like React, Next.js, server-side rendering, routing, authentication, database integration, and content management while building a production-style application from scratch. 
+This is a full-stack blog application built with **Next.js (App Router)**.
+
+The goal of this project is to learn and apply modern full-stack development concepts including:
+
+- React component architecture
+- Next.js App Router patterns
+- Server-side rendering (SSR)
+- Authentication and authorization
+- Database integration
+- API route design
+- Full CRUD functionality
+- Production-style project structure
+
+This project is intentionally built as a real-world application rather than a tutorial demo.
+
+---
 
 ## Goals
 
 The primary goals of this project are:
 
-* Learn the Next.js App Router architecture
-* Practice React component design
-* Implement authentication and authorization
-* Build CRUD functionality
-* Work with databases and APIs
-* Deploy a production-ready application
-* Follow industry-standard project structure and development practices
+- Learn the Next.js App Router architecture
+- Practice scalable React component design
+- Implement authentication and authorization
+- Build full CRUD functionality
+- Work with MongoDB and Mongoose
+- Design and consume REST-style API routes
+- Follow production-ready project structure patterns
+- Prepare for deployment workflows (Vercel)
 
 ---
 
@@ -28,31 +44,35 @@ The primary goals of this project are:
 
 ### Public Features
 
-* View blog posts
-* Read blog posts
-* Like blog posts
-* Comment on blog posts
-* Favorite blog posts
-* User profiles
-* Responsive design
-* Search functionality
-* Category filtering
-* Pagination
+- View blog posts
+- Read individual posts
+- Like posts
+- Comment on posts
+- Favorite posts
+- User profiles
+- Responsive UI design
+- Search functionality
+- Category filtering
+- Pagination
+
+---
 
 ### Author Features
 
-* Create posts
-* Edit posts
-* Delete posts
-* Upload featured images
-* Draft and publish workflow
+- Create posts
+- Edit posts
+- Delete posts
+- Upload featured images
+- Draft/publish workflow (future enhancement)
+
+---
 
 ### Administrative Features
 
-* User management
-* Role-based permissions
-* Content moderation
-* Site analytics dashboard
+- User management
+- Role-based permissions
+- Content moderation tools
+- Analytics dashboard
 
 ---
 
@@ -60,29 +80,28 @@ The primary goals of this project are:
 
 ### Frontend
 
-* Next.js
-* React
-* TypeScript
-* CSS Modules / Tailwind CSS / Custom CSS
+- Next.js (App Router)
+- React
+- TypeScript
+- Tailwind CSS
 
 ### Backend
 
-* Next.js Server Actions
-* Route Handlers
-* Node.js
+- Next.js Route Handlers
+- Node.js runtime
 
 ### Database
 
-* MongoDB
-* Mongoose
+- MongoDB
+- Mongoose ODM
 
 ### Authentication
 
-Planned (NextAuth/Auth.js or custom authentication solution)
+- Custom authentication system (JWT + cookies)
 
 ### Deployment
 
-Planned (Vercel)
+- Planned: Vercel
 
 ---
 
@@ -162,9 +181,10 @@ project-root/
     └── posts.ts
 
 ├── models
+    ├── Comment.ts
     ├── Post.ts
-    ├── User.ts
-    └── Reaction.ts
+    ├── Reaction.ts
+    └── User.ts
  
 ├── public/
 
@@ -190,14 +210,19 @@ project-root/
 
 ---
 
+
+---
+
 ## Development Roadmap
 
 ### Phase 1: Foundation
 
-* [x] Project setup
-* [x] Repository initialization
-* [x] README creation
-* [x] Basic routing
+- [x] Project setup
+- [x] Repository initialization
+- [x] README creation
+- [x] Basic routing
+
+---
 
 ### Phase 2: Frontend Foundation
 
@@ -206,12 +231,16 @@ project-root/
 * [x] Blog post pages
 * [x] Styling implementation
 
+---
+
 ### Phase 3: Database & Data Layer
 
 * [x] MongoDB integration
 * [x] Mongoose models
 * [x] Post storage
-* [x] Dynamic routes
+* [x] Dynamic routing
+
+---
 
 ### Phase 4: Authentication & Security
 
@@ -222,6 +251,8 @@ project-root/
 * [x] Session persistence
 * [x] Ownership verification
 
+---
+
 ### Phase 5: Content Management System
 
 * [x] Create posts
@@ -231,60 +262,56 @@ project-root/
 * [x] User dashboard
 * [x] Author ownership controls
 * [x] Full post body support
-* [x] Category dropdown system
-* [x] Image uploads
+* [x] Category system
+* [x] Image handling
+
+---
 
 ### Phase 6: Search & Discovery
 
 * [x] Search posts by keyword
 * [x] Category filtering
-* [x] Combined search + filtering
-* [x] Improved posts directory
+* [x] Combined filtering system
+* [x] Improved feed structure
 * [x] User-specific post views
+
+---
 
 ### Phase 7: User Experience
 
-* [x] Global loading states
-* [x] Error states
-* [x] Success notications
+* [x] Loading states
+* [x] Error handling UI
+* [x] Success notifications
 * [x] Empty states
-* [x] Mobile responsiveness review
+* [x] Mobile responsiveness
 * [x] Accessibility improvements
+
+---
 
 ### Phase 8: UI & Dashboard Polish
 
 * [x] Homepage redesign
 * [x] Dashboard redesign
-* [x] Featured content sections
+* [x] Featured sections
 * [x] Improved post cards
-* [x] Improved post detail pages
+* [x] Improved post pages
+
+---
 
 ### Phase 9: Social Features
 
 * [x] Comments system
 * [x] Post reactions
-* [ ] User profiles
-* [ ] Bookmarks
-* [ ] Draft posts
-
-### Phase 10: Production Readiness
-
-* [ ] Production deployment
-* [ ] Performance optimization
-* [ ] Final testing
-* [ ] Documentation review
-* [ ] Portfolio preparation
 
 ---
 
-## Resources
+### Phase 10: Production Readiness
 
-- Next.js Documentation
-- React Documentation
-- TypeScript Documentation
-- MongoDB Documentation
-- Mongoose Documentation
-- MDN JavaScript Documentation
+* [x] Code cleanup
+* [x] File documentation
+* [x] Portfolio preparation
+* [ ] Final testing
+* [ ] Deployment (Vercel)
 
 ---
 
@@ -339,7 +366,7 @@ This project is being developed as part of an ongoing effort to strengthen skill
 
 ## Current Status
 
-🚧 In Active Development
+🚧 Production Preparation Phase (Final Testing & Optimization)
 
 This project is currently under development and features may change as the application evolves.
 
@@ -349,9 +376,11 @@ This project is currently under development and features may change as the appli
 
 Potential future improvements include:
 
+* Performance enhancements
 * Rich text editor
 * Newsletter integration
 * SEO optimization
+* User profiles
 * Social sharing
 * Content recommendations
 
