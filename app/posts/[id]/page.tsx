@@ -226,7 +226,6 @@ export default async function PostPage({
           {/* COMMENT FORM */}
           <CommentForm
             postId={post._id}
-            userId={post.authorId}
           />
 
           {/* COMMENT LIST */}

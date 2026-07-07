@@ -1,7 +1,9 @@
-import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/mongodb";
 import Comment from "@/models/Comment";
+import { connectDB } from "@/lib/mongodb";
+import { cookies } from "next/headers"
+import { NextResponse } from "next/server";
 import User from "@/models/User";
+import { verifyToken } from "@/lib/auth";
 
 // ======================================================
 // POST /api/comments
@@ -20,7 +22,6 @@ import User from "@/models/User";
 //
 // {
 //   postId: string,
-//   userId: string,
 //   content: string,
 //   imageUrl?: string
 // }
@@ -34,42 +35,55 @@ import User from "@/models/User";
 
 export async function POST(req: Request) {
   try {
-    // Establish a database connection.
     await connectDB();
 
-    // Parse the incoming JSON payload.
+    const cookieStore = await cookies();
+
+    const token = cookieStore.get("auth_token")?.value;
+
+    if (!token) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const payload = verifyToken(token);
+
+    if (!payload) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
 
     const {
       postId,
-      userId,
       content,
       imageUrl,
     } = body;
 
-    // Ensure all required values exist.
-    if (!postId || !userId || !content) {
+    if (!postId || !content) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    // Create and save the comment.
     const comment = await Comment.create({
       postId,
-      userId,
+      userId: payload.userId,
       content,
       imageUrl: imageUrl || undefined,
     });
 
-    // Return the newly-created document.
     return NextResponse.json(comment, {
       status: 201,
     });
+
   } catch (error) {
-    // Keep backend errors visible during development
-    // and server debugging.
     console.error("POST /comments error:", error);
 
     return NextResponse.json(

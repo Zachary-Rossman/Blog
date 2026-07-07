@@ -24,13 +24,11 @@ import { useState } from "react";
 
 type CommentFormProps = {
   postId: string;
-  userId: string;
   onCommentAdded?: () => void;
 };
 
 export default function CommentForm({
   postId,
-  userId,
   onCommentAdded,
 }: CommentFormProps) {
 
@@ -96,7 +94,6 @@ export default function CommentForm({
         },
         body: JSON.stringify({
           postId,
-          userId,
           content,
           imageUrl: imageUrl || undefined,
         }),
