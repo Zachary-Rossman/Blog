@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 /**
@@ -16,7 +17,7 @@ import { useState } from "react";
  * • Validate user input.
  * • Send the comment to the API.
  * • Display loading and error states.
- * • Notify the parent component after a successful submission.
+ * • Refresh server data after successful creation.
  *
  * The actual database work happens inside the API route.
  * This component only gathers user input and sends it.
@@ -32,27 +33,45 @@ export default function CommentForm({
   onCommentAdded,
 }: CommentFormProps) {
 
-  /* ==========================================================
-     COMPONENT STATE
-     ==========================================================
-     content
-       Stores the user's comment.
+  /*
+   * ==========================================================
+   * ROUTER
+   * ==========================================================
+   *
+   * router.refresh()
+   *
+   * Re-runs server components and refreshes server-fetched data
+   * without requiring a full browser reload.
+   *
+   * This allows newly-created comments to appear immediately.
+   */
 
-     imageUrl
-       Optional image attached to the comment.
+  const router = useRouter();
 
-     loading
-       Prevents duplicate submissions while the request
-       is running.
 
-     error
-       Displays validation or server errors.
-  ========================================================== */
+  /*
+   * ==========================================================
+   * COMPONENT STATE
+   * ==========================================================
+   *
+   * content
+   *   Stores the user's comment text.
+   *
+   * imageUrl
+   *   Optional image attached to the comment.
+   *
+   * loading
+   *   Prevents duplicate submissions.
+   *
+   * error
+   *   Displays validation or API errors.
+   */
 
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
 
   /**
    * ==========================================================
@@ -63,10 +82,10 @@ export default function CommentForm({
    *
    * 1. Prevent normal form submission.
    * 2. Prevent duplicate requests.
-   * 3. Validate required fields.
-   * 4. Send the comment to the API.
-   * 5. Clear the form after success.
-   * 6. Notify the parent component so it can refresh comments.
+   * 3. Validate comment content.
+   * 4. Send comment data to API.
+   * 5. Clear form after success.
+   * 6. Refresh server components.
    */
 
   async function handleSubmit(e: React.FormEvent) {
@@ -76,22 +95,25 @@ export default function CommentForm({
 
     setError("");
 
-    // ---------------------------------------------
-    // Validation
-    // ---------------------------------------------
+
+    // Validate comment content before sending request.
     if (!content.trim()) {
       setError("Comment cannot be empty");
       return;
     }
 
+
     setLoading(true);
+
 
     try {
       const res = await fetch("/api/comments", {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({
           postId,
           content,
@@ -99,29 +121,54 @@ export default function CommentForm({
         }),
       });
 
+
       const data = await res.json();
 
+
+      // Handle API errors.
       if (!res.ok) {
         setError(data?.error || "Failed to post comment");
         return;
       }
 
-      // Reset the form after a successful submission.
+
+      /*
+       * Reset form after successful creation.
+       */
       setContent("");
       setImageUrl("");
 
-      // Notify the parent component that a comment
-      // was successfully created.
+
+      /*
+       * Notify parent component if it needs to react.
+       */
       onCommentAdded?.();
 
+
+      /*
+       * Refresh server components.
+       *
+       * This causes the post page to:
+       *
+       * 1. Re-run its server fetch.
+       * 2. Get the newest comments.
+       * 3. Render the updated comment list.
+       *
+       * No manual browser refresh required.
+       */
+      router.refresh();
+
+
     } catch {
-      // Network or unexpected error.
       setError("Network error. Please try again.");
+
     } finally {
-      // Always restore the form to its normal state.
+
       setLoading(false);
+
     }
   }
+
 
   return (
     <form
@@ -130,9 +177,7 @@ export default function CommentForm({
       aria-describedby={error ? "comment-error" : undefined}
     >
 
-      {/* ======================================================
-          ERROR MESSAGE
-      ======================================================= */}
+      {/* ERROR MESSAGE */}
       {error && (
         <div
           id="comment-error"
@@ -144,9 +189,8 @@ export default function CommentForm({
         </div>
       )}
 
-      {/* ======================================================
-          COMMENT FIELD
-      ======================================================= */}
+
+      {/* COMMENT FIELD */}
       <div className="space-y-1">
 
         <label
@@ -155,6 +199,7 @@ export default function CommentForm({
         >
           Comment
         </label>
+
 
         <textarea
           id="comment"
@@ -168,9 +213,8 @@ export default function CommentForm({
 
       </div>
 
-      {/* ======================================================
-          OPTIONAL IMAGE
-      ======================================================= */}
+
+      {/* OPTIONAL IMAGE */}
       <div className="space-y-1">
 
         <label
@@ -179,6 +223,7 @@ export default function CommentForm({
         >
           Image URL (optional)
         </label>
+
 
         <input
           id="imageUrl"
@@ -191,9 +236,8 @@ export default function CommentForm({
 
       </div>
 
-      {/* ======================================================
-          SUBMIT BUTTON
-      ======================================================= */}
+
+      {/* SUBMIT BUTTON */}
       <button
         type="submit"
         disabled={loading}
