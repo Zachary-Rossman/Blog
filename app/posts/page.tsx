@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { getPosts } from "@/lib/posts";
 import Link from "next/link";
 import PostList from "@/components/posts/PostList";
 import { verifyToken } from "@/lib/auth";
@@ -55,7 +56,7 @@ export default async function PostsPage() {
     cache: "no-store",
   });
 
-  const posts = await res.json();
+  const posts = await getPosts();
 
   return (
     <main className="min-h-screen bg-gray-50">

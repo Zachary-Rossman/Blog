@@ -1,3 +1,4 @@
+import { getPosts } from "@/lib/posts";
 import Hero from "@/components/layout/Hero";
 import PostList from "@/components/posts/PostList";
 
@@ -27,7 +28,7 @@ export default async function Home() {
     cache: "no-store",
   });
 
-  const posts = await response.json();
+  const posts = await getPosts();
 
   // =====================================================
   // DATA SPLITTING FOR UI STRUCTURE
