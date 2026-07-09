@@ -52,9 +52,6 @@ export default async function PostsPage() {
    * - filtering
    * - server-side query params
    */
-  const res = await fetch("/api/posts", {
-    cache: "no-store",
-  });
 
   const posts = await getPosts();
 

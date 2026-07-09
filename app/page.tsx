@@ -24,10 +24,6 @@ import PostList from "@/components/posts/PostList";
  * - No client-side state is used here
  */
 export default async function Home() {
-  const response = await fetch("/api/posts", {
-    cache: "no-store",
-  });
-
   const posts = await getPosts();
 
   // =====================================================
