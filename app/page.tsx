@@ -23,7 +23,7 @@ import PostList from "@/components/posts/PostList";
  * - No client-side state is used here
  */
 export default async function Home() {
-  const response = await fetch("http://localhost:3000/api/posts", {
+  const response = await fetch("/api/posts", {
     cache: "no-store",
   });
 

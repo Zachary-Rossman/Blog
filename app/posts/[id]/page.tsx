@@ -47,7 +47,7 @@ export default async function PostPage({
    * NOT OPTIMAL FOR SCALE:
    * - should be GET /api/posts/:id
    */
-  const res = await fetch("http://localhost:3000/api/posts", {
+  const res = await fetch("/api/posts", {
     cache: "no-store",
   });
 
@@ -68,7 +68,7 @@ export default async function PostPage({
    * - ensures real-time comment updates
    */
   const commentRes = await fetch(
-    `http://localhost:3000/api/comments?postId=${id}`,
+    `/api/comments?postId=${id}`,
     {
       cache: "no-store",
     }
@@ -89,7 +89,7 @@ export default async function PostPage({
    * - Server Components do NOT automatically include browser cookies in fetch
    */
   const reactionRes = await fetch(
-    `http://localhost:3000/api/reactions?postId=${id}`,
+    `/api/reactions?postId=${id}`,
     {
       cache: "no-store",
       headers: {
