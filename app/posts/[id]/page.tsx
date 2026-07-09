@@ -299,7 +299,7 @@ export default async function PostPage({
           <p className="text-gray-500">
             Written by{" "}
             <span className="font-medium text-gray-700">
-              {post.author}
+              {post.authorId}
             </span>
           </p>
 
