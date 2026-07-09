@@ -1,5 +1,6 @@
 "use client";
 
+import { getPosts } from "@/lib/posts";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import EditPostForm from "@/components/posts/EditPostForm";
@@ -56,8 +57,7 @@ export default function EditPostPage() {
   useEffect(() => {
     async function loadPost() {
       try {
-        const res = await fetch("/api/posts");
-        const data = await res.json();
+        const posts = await getPosts();
 
         /**
          * =====================================
@@ -69,7 +69,7 @@ export default function EditPostPage() {
          *
          * We find the matching post locally.
          */
-        const found = data.find(
+        const found = posts.find(
           (p: Post) => p._id === params.id
         );
 
