@@ -311,7 +311,7 @@ project-root/
 * [x] File documentation
 * [x] Portfolio preparation
 * [x] Final testing
-* [ ] Deployment (Vercel)
+* [x] Deployment (Vercel)
 
 ---
 
